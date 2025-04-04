@@ -3,7 +3,7 @@ package server
 import (
 	"log"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/database"
+	database "github.com/CP-RektMart/computer-network-g28/backend/internal/db"
 	"github.com/gofiber/fiber/v2"
 )
 
