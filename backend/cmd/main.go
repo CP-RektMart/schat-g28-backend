@@ -15,14 +15,8 @@ func main() {
 	config := config.Load()
 
 	store := db.New(db.Config{
-		Host:     config.Postgres.Host,
-		User:     config.Postgres.User,
-		Password: config.Postgres.Password,
-		DBName:   config.Postgres.DBName,
-		Port:     config.Postgres.Port,
-		SSLMode:  config.Postgres.SSLMode,
+		PgConfig: config.Postgres,
 	})
-
 	server := server.New(server.Config{
 		Name:         config.Server.Name,
 		Port:         config.Server.Port,
