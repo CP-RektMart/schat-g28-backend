@@ -17,6 +17,7 @@ func main() {
 	store := db.New(db.Config{
 		PgConfig: config.Postgres,
 	})
+
 	server := server.New(server.Config{
 		Name:         config.Server.Name,
 		Port:         config.Server.Port,

@@ -6,6 +6,7 @@ import (
 	"log"
 
 	database "github.com/CP-RektMart/computer-network-g28/backend/internal/db"
+	"github.com/CP-RektMart/computer-network-g28/backend/internal/dto"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -37,6 +38,11 @@ func New(config Config, DB *database.Store) *Server {
 }
 
 func (s *Server) Start(ctx context.Context, stop context.CancelFunc) {
+	s.App.Get("/health", func(c *fiber.Ctx) error {
+		return c.JSON(dto.HttpResponse[string]{
+			Result: "ok",
+		})
+	})
 	go func() {
 		if err := s.App.Listen(fmt.Sprintf("localhost:%d", s.config.Port)); err != nil {
 			log.Fatalf("failed to start server: %v", err)
