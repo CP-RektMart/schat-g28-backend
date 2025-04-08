@@ -1,6 +1,8 @@
 package server
 
 import (
+	"context"
+	"fmt"
 	"log"
 
 	database "github.com/CP-RektMart/computer-network-g28/backend/internal/db"
@@ -8,7 +10,16 @@ import (
 )
 
 type Config struct {
-	ServerAddr string
+	Name         string `env:"NAME"`
+	Port         int    `env:"PORT"`
+	MaxBodyLimit int    `env:"MAX_BODY_LIMIT"`
+}
+
+type CorsConfig struct {
+	AllowedOrigins   string `env:"ALLOWED_ORIGINS"`
+	AllowedMethods   string `env:"ALLOWED_METHODS"`
+	AllowedHeaders   string `env:"ALLOWED_HEADERS"`
+	AllowCredentials bool   `env:"ALLOW_CREDENTIALS"`
 }
 
 type Server struct {
@@ -25,9 +36,21 @@ func New(config Config, DB *database.Store) *Server {
 	}
 }
 
-func (s *Server) Start() {
-	log.Printf("server started on %s", s.config.ServerAddr)
-	if err := s.App.Listen(s.config.ServerAddr); err != nil {
-		log.Fatalf("failed to start server: %s", err)
-	}
+func (s *Server) Start(ctx context.Context, stop context.CancelFunc) {
+	go func() {
+		if err := s.App.Listen(fmt.Sprintf("localhost:%d", s.config.Port)); err != nil {
+			log.Fatalf("failed to start server: %v", err)
+			stop()
+		}
+	}()
+
+	defer func() {
+		if err := s.App.Shutdown(); err != nil {
+			log.Printf("failed to shutdown server: %v.", err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	log.Println("shutting down server...")
 }
