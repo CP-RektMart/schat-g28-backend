@@ -21,21 +21,22 @@ export default function LoginPage() {
           </div>
           <h2 className='mt-6 text-3xl font-bold text-gray-900'>ChatApp</h2>
           <p className='mt-2 text-sm text-gray-600'>
-            Connect with friends and colleagues
+            Connect with your pals
           </p>
         </div>
 
         <div className='mt-8 space-y-4'>
           <Button
             onClick={handleLogin}
-            className='flex w-full items-center justify-center gap-2 bg-white text-gray-700 hover:bg-gray-50'
+            className='flex w-full items-center justify-center gap-2 bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500 text-white hover:opacity-90'
             variant='outline'
           >
+            <span className='text-xl font-black'>G</span>
             <span>Sign in with Google</span>
           </Button>
 
           <div className='text-center text-xs text-gray-500'>
-            By signing in, you agree to our Terms of Service and Privacy Policy
+            By signing in, you agree to be gay.
           </div>
         </div>
       </div>
