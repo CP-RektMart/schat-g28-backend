@@ -5,8 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRole string
-
 type Provider string
 
 const (

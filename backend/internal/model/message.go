@@ -1,19 +1,21 @@
 package model
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
-type MessageType string
+// type MessageType string
 
-// Only text message acceptable
+// const (
+// 	MessageTypeText      MessageType = "TEXT"
+// 	MessageTypeImage     MessageType = "IMAGE"
+// 	MessageTypeQuotation MessageType = "QUOTATION"
+// 	MessageTypePreview   MessageType = "PREVIEW"
+// )
 
 type DirectMessage struct {
 	gorm.Model
-	Content    string    `gorm:"not null"`
-	Timestamps time.Time `gorm:"not null"`
+	Content string `gorm:"not null"`
 
 	SenderID   uint `gorm:"not null"`
 	ReceiverID uint `gorm:"not null"`
@@ -23,8 +25,7 @@ type DirectMessage struct {
 
 type GroupMessage struct {
 	gorm.Model
-	Content    string    `gorm:"not null"`
-	Timestamps time.Time `gorm:"not null"`
+	Content string `gorm:"not null"`
 
 	SenderID uint `gorm:"not null"`
 	GroupID  uint `gorm:"not null"`

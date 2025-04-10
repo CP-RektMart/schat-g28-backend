@@ -7,7 +7,7 @@ import (
 	"log/slog"
 
 	_ "github.com/CP-RektMart/computer-network-g28/backend/doc"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/db"
+	"github.com/CP-RektMart/computer-network-g28/backend/internal/database"
 	"github.com/CP-RektMart/computer-network-g28/backend/internal/dto"
 	"github.com/CP-RektMart/computer-network-g28/backend/internal/jwt"
 	"github.com/CP-RektMart/computer-network-g28/backend/pkg/apperror"
