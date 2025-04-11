@@ -15,7 +15,7 @@ import (
 // @Tags         direct_message
 // @Router       /api/v1/messages [GET]
 // @Security	 ApiKeyAuth
-// @Success      200    {object}  dto.HttpListResponse[dto.ChatResponse]
+// @Success      200    {object}  dto.HttpListResponse[dto.ChatDirectResponse]
 // @Failure      401    {object}  dto.HttpError
 // @Failure      404    {object}  dto.HttpError
 // @Failure      500    {object}  dto.HttpError
@@ -41,11 +41,11 @@ func (h *Handler) HandleListMessages(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(dto.HttpListResponse[dto.ChatDirectResponse]{
-		Result: h.toChatResponse(userID, messages),
+		Result: h.toDirectChatResponse(userID, messages),
 	})
 }
 
-func (h *Handler) toChatResponse(userID uint, messages []model.DirectMessage) []dto.ChatDirectResponse {
+func (h *Handler) toDirectChatResponse(userID uint, messages []model.DirectMessage) []dto.ChatDirectResponse {
 	chats := make(map[uint]*dto.ChatDirectResponse)
 	var talker model.User
 

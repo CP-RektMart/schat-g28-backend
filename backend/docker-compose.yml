@@ -1,25 +1,25 @@
 services:
   postgres:
     image: postgres:17-alpine3.21
-    container_name: pic-me-pls-postgres
+    container_name: schat-postgres
     environment:
-      POSTGRES_USER: pic-me-pls
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: pic-me-pls
+      POSTGRES_DB: schat
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5431:5432"
   redis:
     image: redis:7-alpine
-    container_name: pic-me-pls-redis
+    container_name: schat-redis
     ports:
       - "6379:6379"
   api:
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: pic-me-pls-api
+    container_name: schat-api
     env_file: .env.docker
     depends_on:
       - postgres
@@ -29,7 +29,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pic-me-pls-pgadmin
+    container_name: schat-pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
