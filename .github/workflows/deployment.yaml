@@ -26,18 +26,15 @@ jobs:
       uses: golangci/golangci-lint-action@v6
       with:
         version: v1.60
-        working-directory: ./backend
     - name: generate swagger
       run: |
         go install github.com/swaggo/swag/v2/cmd/swag@v2.0.0-rc4
         go generate ./...
-      working-directory: ./backend
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
-        working-directory: ./backend
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -45,12 +42,10 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        working-directory: ./backend
         push: true
         tags: ghcr.io/${{ github.repository }}:latest
     - uses: deploys-app/deploys-action@v1
       with:
-        working-directory: ./backend
         project: socket-computer-network-g28
         location: gke.cluster-rcf2
         name: schat-backend
