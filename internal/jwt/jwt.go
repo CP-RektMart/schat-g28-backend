@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/internal/model"
 	"github.com/cockroachdb/errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"

@@ -7,17 +7,17 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/chat"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/config"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/database"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/jwt"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/middlewares/authentication"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/server"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/services/auth"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/services/message"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/services/user"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/validator"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/logger"
+	"github.com/CP-RektMart/schat-g28-backend/internal/chat"
+	"github.com/CP-RektMart/schat-g28-backend/internal/config"
+	"github.com/CP-RektMart/schat-g28-backend/internal/database"
+	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
+	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
+	"github.com/CP-RektMart/schat-g28-backend/internal/server"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/user"
+	"github.com/CP-RektMart/schat-g28-backend/internal/validator"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 )
 
 // @title						Pic Me Pls API

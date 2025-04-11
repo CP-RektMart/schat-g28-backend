@@ -1,9 +1,9 @@
 package message
 
 import (
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/dto"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/model"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/apperror"
+	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
+	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"

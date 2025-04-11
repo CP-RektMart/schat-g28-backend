@@ -1,4 +1,4 @@
-module github.com/CP-RektMart/computer-network-g28/backend
+module github.com/CP-RektMart/schat-g28-backend
 
 go 1.23.5
 

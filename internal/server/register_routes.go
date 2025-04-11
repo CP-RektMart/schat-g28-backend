@@ -1,10 +1,10 @@
 package server
 
 import (
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/middlewares/authentication"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/services/auth"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/services/message"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/services/user"
+	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/user"
 	"github.com/gofiber/contrib/websocket"
 )
 

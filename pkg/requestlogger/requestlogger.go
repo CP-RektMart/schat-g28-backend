@@ -4,9 +4,9 @@ import (
 	"errors"
 	"log/slog"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/dto"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/apperror"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/logger"
+	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 

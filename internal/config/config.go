@@ -3,11 +3,11 @@ package config
 import (
 	"log"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/jwt"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/server"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/logger"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/postgres"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/redis"
+	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
+	"github.com/CP-RektMart/schat-g28-backend/internal/server"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/postgres"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/redis"
 	"github.com/caarlos0/env/v10"
 	"github.com/joho/godotenv"
 )

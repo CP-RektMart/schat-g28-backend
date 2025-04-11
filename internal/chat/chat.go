@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/database"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/dto"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/model"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/logger"
+	"github.com/CP-RektMart/schat-g28-backend/internal/database"
+	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
+	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/cockroachdb/errors"
 	"github.com/go-playground/validator/v10"
 )

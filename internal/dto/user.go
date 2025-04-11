@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/CP-RektMart/computer-network-g28/backend/internal/model"
+import "github.com/CP-RektMart/schat-g28-backend/internal/model"
 
 type UserResponse struct {
 	ID                uint   `json:"id"`

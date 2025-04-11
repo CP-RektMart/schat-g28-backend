@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/chat"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/jwt"
-	"github.com/CP-RektMart/computer-network-g28/backend/pkg/logger"
+	"github.com/CP-RektMart/schat-g28-backend/internal/chat"
+	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/gofiber/contrib/websocket"
 )
 

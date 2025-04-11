@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/CP-RektMart/computer-network-g28/backend/doc"
+	"github.com/CP-RektMart/schat-g28-backend/doc"
 	"github.com/gofiber/fiber/v2"
 	fiberSwagger "github.com/gofiber/swagger"
 	"github.com/swaggo/swag"

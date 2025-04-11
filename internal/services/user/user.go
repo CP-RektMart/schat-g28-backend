@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/database"
-	"github.com/CP-RektMart/computer-network-g28/backend/internal/middlewares/authentication"
+	"github.com/CP-RektMart/schat-g28-backend/internal/database"
+	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/go-playground/validator/v10"
 )
 
