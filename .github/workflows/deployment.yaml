@@ -1,16 +1,18 @@
-name: Deploy
+name: Deploy Backend
 on:
   push:
-    branches:
-    - main
+    paths:
+      - 'backend/**'
 
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: backend
+        
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -24,10 +26,12 @@ jobs:
       uses: golangci/golangci-lint-action@v6
       with:
         version: v1.60
+        working-directory: ./backend
     - name: generate swagger
       run: |
         go install github.com/swaggo/swag/v2/cmd/swag@v2.0.0-rc4
         go generate ./...
+      working-directory: ./backend
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to GitHub Container Registry
