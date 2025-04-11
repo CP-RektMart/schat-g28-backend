@@ -1,8 +1,8 @@
 name: Deploy Backend
 on:
   push:
-    paths:
-      - 'backend/**'
+    branches:
+      - main
 
 
 jobs:
@@ -11,8 +11,8 @@ jobs:
 
     defaults:
       run:
-        working-directory: backend
-        
+        working-directory: ./backend
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -37,6 +37,7 @@ jobs:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
+        working-directory: ./backend
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -44,10 +45,12 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
+        working-directory: ./backend
         push: true
         tags: ghcr.io/${{ github.repository }}:latest
     - uses: deploys-app/deploys-action@v1
       with:
+        working-directory: ./backend
         project: socket-computer-network-g28
         location: gke.cluster-rcf2
         name: schat-backend
