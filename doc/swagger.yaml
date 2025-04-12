@@ -138,6 +138,11 @@ components:
         profilePictureUrl:
           type: string
       type: object
+    dto.UserUpdateRequest:
+      properties:
+        name:
+          type: string
+      type: object
   securitySchemes:
     ApiKeyAuth:
       in: header
@@ -296,6 +301,39 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get me
+      tags:
+      - user
+    patch:
+      description: Update user's profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dto.UserUpdateRequest'
+        description: request request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpResponse-dto_UserResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Update me
       tags:
       - user
   /api/v1/messages:

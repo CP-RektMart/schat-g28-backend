@@ -30,6 +30,7 @@ func (s *Server) RegisterRoutes(
 		// me
 		me := all.Group("/me")
 		me.Get("/", authMiddleware.Auth, userHandler.HandleGetMe)
+		me.Patch("/", authMiddleware.Auth, userHandler.HandleUpdateMe)
 
 		// messages
 		message := all.Group("/messages")
