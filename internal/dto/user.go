@@ -2,6 +2,10 @@ package dto
 
 import "github.com/CP-RektMart/schat-g28-backend/internal/model"
 
+type UserUpdateRequest struct {
+	Name              string `json:"name"`
+}
+
 type UserResponse struct {
 	ID                uint   `json:"id"`
 	Name              string `json:"name"`

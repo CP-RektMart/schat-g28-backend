@@ -8,7 +8,6 @@ type TokenResponse struct {
 
 type RegisterRequest struct {
 	Provider string `json:"provider" validate:"required,provider"` // GOOGLE
-	Role     string `json:"role" validate:"required,role"`         // CUSTOMER, PHOTOGRAPHER, ADMIN
 	IDToken  string `json:"idToken" validate:"required"`
 }
 

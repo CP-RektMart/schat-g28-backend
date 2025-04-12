@@ -103,13 +103,9 @@ components:
         provider:
           description: GOOGLE
           type: string
-        role:
-          description: CUSTOMER, PHOTOGRAPHER, ADMIN
-          type: string
       required:
       - idToken
       - provider
-      - role
       type: object
     dto.RegisterResponse:
       properties:
