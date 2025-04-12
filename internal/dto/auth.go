@@ -21,7 +21,6 @@ type RefreshTokenRequest struct {
 }
 
 type LoginRequest struct {
-	Provider string `json:"provider" validate:"required,provider"` // GOOGLE
 	IDToken  string `json:"idToken" validate:"required"`
 }
 

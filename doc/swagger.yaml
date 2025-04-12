@@ -8,7 +8,14 @@ components:
           type: array
           uniqueItems: false
         user:
-          $ref: '#/components/schemas/dto.PublicUserResponse'
+          $ref: '#/components/schemas/dto.UserResponse'
+      type: object
+    dto.CreateGroupRequest:
+      properties:
+        name:
+          type: string
+        profilePicture:
+          type: string
       type: object
     dto.DirectMessageResponse:
       properties:
@@ -69,12 +76,8 @@ components:
       properties:
         idToken:
           type: string
-        provider:
-          description: GOOGLE
-          type: string
       required:
       - idToken
-      - provider
       type: object
     dto.LoginResponse:
       properties:
@@ -86,17 +89,6 @@ components:
           type: string
         user:
           $ref: '#/components/schemas/dto.UserResponse'
-      type: object
-    dto.PublicUserResponse:
-      properties:
-        email:
-          type: string
-        id:
-          type: integer
-        name:
-          type: string
-        profilePictureUrl:
-          type: string
       type: object
     dto.RefreshTokenRequest:
       properties:
@@ -114,6 +106,13 @@ components:
         refreshToken:
           type: string
       type: object
+    dto.UpdateGroupRequest:
+      properties:
+        name:
+          type: string
+        profilePicture:
+          type: string
+      type: object
     dto.UserResponse:
       properties:
         email:
@@ -127,7 +126,11 @@ components:
       type: object
     dto.UserUpdateRequest:
       properties:
+        email:
+          type: string
         name:
+          type: string
+        profilePictureUrl:
           type: string
       type: object
   securitySchemes:
@@ -146,7 +149,6 @@ openapi: 3.1.0
 paths:
   /api/v1/auth/login:
     post:
-      description: Login
       requestBody:
         content:
           application/json:
@@ -174,20 +176,17 @@ paths:
                 $ref: '#/components/schemas/dto.HttpError'
           description: Internal Server Error
       summary: Login
-      tags:
-      - auth
   /api/v1/auth/logout:
     post:
-      description: Logout
       responses:
-        "204":
-          description: No Content
-        "400":
+        "200":
+          description: OK
+        "401":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/dto.HttpError'
-          description: Bad Request
+          description: Unauthorized
         "500":
           content:
             application/json:
@@ -201,13 +200,12 @@ paths:
       - auth
   /api/v1/auth/refresh-token:
     post:
-      description: Refresh Token
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/dto.RefreshTokenRequest'
-        description: request request
+        description: body
         required: true
       responses:
         "200":
@@ -305,6 +303,164 @@ paths:
       summary: delete file
       tags:
       - files
+  /api/v1/groups:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dto.CreateGroupRequest'
+        description: group detail
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: create group
+      tags:
+      - groups
+  /api/v1/groups/{groupID}:
+    delete:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: delete group
+      tags:
+      - groups
+    patch:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dto.UpdateGroupRequest'
+        description: group detail
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: update group
+      tags:
+      - groups
+  /api/v1/groups/{groupID}/join:
+    get:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: join group
+      tags:
+      - groups
   /api/v1/me:
     get:
       description: Get me
