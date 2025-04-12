@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,14 +28,16 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
-	// hello
-	config := config.Load()
-
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	config, err := config.Load()
+	if err != nil {
+		logger.PanicContext(ctx, "failed to load config", "error", err)
+	}
+
 	if err := logger.Init(config.Logger); err != nil {
-		logger.PanicContext(ctx, "failed to initialize logger", slog.Any("error", err))
+		logger.PanicContext(ctx, "failed to initialize logger", "error", err)
 	}
 
 	store := database.New(ctx, config.Postgres, config.Redis)

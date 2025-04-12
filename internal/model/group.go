@@ -4,5 +4,6 @@ import "gorm.io/gorm"
 
 type Group struct {
 	gorm.Model
-	Name        string `gorm:"not null"`
+	ProfilePicture string `gorm:"not null"`
+	Name           string `gorm:"not null"`
 }

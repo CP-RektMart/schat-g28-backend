@@ -5,25 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Provider string
-
-const (
-	ProviderUnknown Provider = ""
-	ProviderGoogle  Provider = "GOOGLE"
-)
-
-func (p Provider) String() string {
-	return string(p)
-}
-
-func ValidateProvider(provider string) bool {
-	switch Provider(provider) {
-	case ProviderGoogle:
-		return true
-	}
-	return false
-}
-
 type Token struct {
 	AccessToken  string
 	RefreshToken string
