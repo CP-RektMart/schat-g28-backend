@@ -1,11 +1,15 @@
 package auth
 
 import (
+	"context"
+	"strings"
+
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"
+	"google.golang.org/api/idtoken"
 	"gorm.io/gorm"
 )
 
@@ -67,4 +71,44 @@ func (h *Handler) HandleLogin(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(dto.HttpResponse[dto.LoginResponse]{
 		Result: result,
 	})
+}
+
+func (h *Handler) validateIDToken(c context.Context, idToken string) (*model.User, error) {
+	payload, err := idtoken.Validate(c, idToken, h.googleClientID)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to validate id token")
+	}
+
+	name, ok := payload.Claims["name"].(string)
+	if !ok {
+		return nil, errors.New("name claim not found in id token")
+	}
+
+	email, ok := payload.Claims["email"].(string)
+	if !ok {
+		return nil, errors.New("email claim not found in id token")
+	}
+
+	picture, ok := payload.Claims["picture"].(string)
+	if !ok {
+		return nil, errors.New("picture claim not found in id token")
+	}
+
+	return &model.User{
+		Name:              name,
+		Email:             email,
+		ProfilePictureURL: picture,
+	}, nil
+}
+
+func (h *Handler) createUser(tx *gorm.DB, user *model.User) (*model.User, error) {
+	if err := tx.Save(user).Error; err != nil {
+		if strings.Contains(err.Error(), "duplicate") {
+			return nil, apperror.BadRequest("this account already register", err)
+		}
+
+		return nil, errors.Wrap(err, "failed to create user")
+	}
+
+	return user, nil
 }
