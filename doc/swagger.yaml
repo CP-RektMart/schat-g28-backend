@@ -176,6 +176,8 @@ paths:
                 $ref: '#/components/schemas/dto.HttpError'
           description: Internal Server Error
       summary: Login
+      tags:
+      - auth
   /api/v1/auth/logout:
     post:
       responses:
