@@ -44,4 +44,5 @@ func (s *Server) RegisterRoutes(
 	group.Get("/:id", authMiddleware.Auth, groupHandler.HandleGetByID)
 	group.Patch("/:id", authMiddleware.Auth, groupHandler.HandleUpdateGroup)
 	group.Get("/:id/join", authMiddleware.Auth, groupHandler.HandleJoinGroup)
+	group.Delete("/:id", authMiddleware.Auth, groupHandler.HandleDeleteGroup)
 }

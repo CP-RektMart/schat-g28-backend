@@ -16,6 +16,8 @@ import (
 // @Success			200
 // @Failure			400	{object}	dto.HttpError
 // @Failure			401	{object}	dto.HttpError
+// @Failure			403	{object}	dto.HttpError
+// @Failure			404	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
 func (h *Handler) HandleCreateGroup(c *fiber.Ctx) error {
 	ctx := c.UserContext()

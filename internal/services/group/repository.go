@@ -34,3 +34,13 @@ func (r *Repository) Get(id uint) (model.Group, error) {
 func (r *Repository) Update(g model.Group) error {
 	return r.db.Save(&g).Error
 }
+
+func (r *Repository) Delete(id uint) error {
+	if err := r.db.Delete(&model.Group{}, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return apperror.NotFound("group not found", err)
+		}
+		return err
+	}
+	return nil
+}

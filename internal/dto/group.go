@@ -13,6 +13,10 @@ type UpdateGroupRequest struct {
 	ProfilePicture *string `json:"profilePicture"`
 }
 
+type DeleteGroupRequest struct {
+	ID uint `params:"id"`
+}
+
 type GetGroupReqest struct {
 	ID uint `params:"id"`
 }
