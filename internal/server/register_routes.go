@@ -4,6 +4,7 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/friend"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
 )
 
@@ -13,6 +14,7 @@ func (s *Server) RegisterRoutes(
 	// messageHandler *message.Handler,
 	fileHandler *file.Handler,
 	groupHandler *group.Handler,
+	friendhandler *friend.Handler,
 ) {
 	v1 := s.app.Group("/api/v1")
 
@@ -46,4 +48,9 @@ func (s *Server) RegisterRoutes(
 	group.Get("/:id/join", authMiddleware.Auth, groupHandler.HandleJoinGroup)
 	group.Get("/:id/leave", authMiddleware.Auth, groupHandler.HandleLeaveGroup)
 	group.Delete("/:id", authMiddleware.Auth, groupHandler.HandleDeleteGroup)
+
+	// friend
+	friend := v1.Group("/friends")
+	friend.Post("/:friendID", authMiddleware.Auth, friendhandler.HandleAddFriend)
+	friend.Delete("/:friendID", authMiddleware.Auth, friendhandler.HandleUnFriend)
 }

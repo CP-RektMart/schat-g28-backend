@@ -19,10 +19,10 @@ func NewRepository(db *gorm.DB) *Repository {
 
 func (r *Repository) GetUserByID(id uint) (model.User, error) {
 	var u model.User
-	err := r.db.First(&u, id).Error
+	err := r.db.Preload("Groups").Preload("Friends").First(&u, id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return model.User{}, apperror.NotFound("user with this email not exist", err)
+			return model.User{}, apperror.NotFound("user don't exist", err)
 		}
 		return model.User{}, err
 	}
@@ -62,4 +62,18 @@ func (r *Repository) UpdateUser(u model.User) error {
 	}
 
 	return nil
+}
+
+func (r *Repository) AddFriend(userID, friendID uint) error {
+	user := model.User{Model: gorm.Model{ID: userID}}
+	friend := model.User{Model: gorm.Model{ID: friendID}}
+
+	return r.db.Model(&user).Association("Friends").Append(&friend)
+}
+
+func (r *Repository) UnFriend(userID, friendID uint) error {
+	user := model.User{Model: gorm.Model{ID: userID}}
+	friend := model.User{Model: gorm.Model{ID: friendID}}
+
+	return r.db.Model(&user).Association("Friends").Delete(&friend)
 }

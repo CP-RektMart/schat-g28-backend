@@ -1,9 +1,11 @@
 package model
 
 import (
+	"errors"
 	"net/mail"
 
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
 
@@ -12,6 +14,8 @@ type User struct {
 	Name              string `gorm:"not null"`
 	Email             string `gorm:"not null;unique"`
 	ProfilePictureURL string
+	Friends           []User  `gorm:"many2many:friends"`
+	Groups            []Group `gorm:"many2many:group_member"`
 }
 
 func NewUser(name, email, profilePictureURL string) (User, error) {
@@ -57,3 +61,33 @@ func (u *User) Valid() error {
 	return nil
 }
 
+func (u *User) CanbeFriend(userID uint) error {
+	if u.ID == userID {
+		return errors.New("user can't be a friend with themself")
+	}
+
+	if u.IsFriend(userID) {
+		return errors.New("already be a friend")
+	}
+
+	return nil
+}
+
+func (u *User) CanUnFriend(userID uint) error {
+	if u.ID == userID {
+		return errors.New("user can't unfriend themself")
+	}
+
+	if !u.IsFriend(userID) {
+		return errors.New("not a friend")
+	}
+
+	return nil
+}
+
+func (u *User) IsFriend(userID uint) bool {
+	_, found := lo.Find(u.Friends, func(f User) bool {
+		return f.ID == userID
+	})
+	return found
+}
