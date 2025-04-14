@@ -1,11 +1,14 @@
 package file
 
 import (
+	"fmt"
+
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 // @Summary			upload file
@@ -34,23 +37,14 @@ func (h *Handler) HandleUploadFile(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed open file")
 	}
 
-	URL, err := h.store.UploadFile(
+	f, err := h.repo.Create(
 		ctx,
-		"/files/"+file.Filename,
+		fmt.Sprintf("/file/%s_%s", uuid.NewString(), file.Filename),
 		file.Header.Get("content-type"),
 		data,
-		true,
+		userID,
+		model.NewFile,
 	)
-	if err != nil {
-		return errors.Wrap(err, "failed upload file")
-	}
-
-	f, err := model.NewFile(URL, userID)
-	if err != nil {
-		return errors.Wrap(err, "failed create file")
-	}
-
-	f, err = h.repo.Create(f)
 	if err != nil {
 		return errors.Wrap(err, "failed save file record")
 	}

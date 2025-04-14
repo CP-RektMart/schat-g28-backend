@@ -46,7 +46,7 @@ func main() {
 
 	// repository
 	authRepo := auth.NewRepository(db)
-	fileRepo := file.NewRepository(db)
+	fileRepo := file.NewRepository(db, storage)
 
 	// services
 	jwtService := jwt.New(config.JWT, cache)
