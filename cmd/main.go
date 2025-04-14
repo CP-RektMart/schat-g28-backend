@@ -14,7 +14,6 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/server"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
-	"github.com/CP-RektMart/schat-g28-backend/internal/services/user"
 	"github.com/CP-RektMart/schat-g28-backend/internal/utils/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/go-playground/validator/v10"
@@ -41,9 +40,13 @@ func main() {
 		logger.PanicContext(ctx, "failed to initialize logger", "error", err)
 	}
 
+	db := database.NewDB(ctx, config.Postgres)
 	store := database.New(ctx, config.Postgres, config.Redis)
 	server := server.New(config.Server, config.Cors, config.JWT, store)
 	validate := validator.New()
+
+	// repository
+	authRepo := auth.NewRepository(db)
 
 	// services
 	jwtService := jwt.New(config.JWT, store.Cache)
@@ -54,8 +57,7 @@ func main() {
 	authMiddleware := authentication.NewAuthMiddleware(jwtService)
 
 	// handlers
-	authHandler := auth.NewHandler(store, validate, jwtService, authMiddleware, googleOauth)
-	userHandler := user.NewHandler(store, validate, authMiddleware)
+	authHandler := auth.NewHandler(validate, authRepo, jwtService, authMiddleware, googleOauth)
 	messageHandler := message.NewHandler(store, authMiddleware, chatService)
 	server.RegisterDocs()
 
@@ -63,7 +65,6 @@ func main() {
 	server.RegisterRoutes(
 		authMiddleware,
 		authHandler,
-		userHandler,
 		messageHandler,
 	)
 

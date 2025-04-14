@@ -3,9 +3,9 @@ package dto
 import "github.com/CP-RektMart/schat-g28-backend/internal/model"
 
 type UserUpdateRequest struct {
-	Name              string `json:"name"`
-	Email             string `json:"email"`
-	ProfilePictureURL string `json:"profilePictureUrl"`
+	Name              *string `json:"name"`
+	Email             *string `json:"email"`
+	ProfilePictureURL *string `json:"profilePictureUrl"`
 }
 
 type UserResponse struct {

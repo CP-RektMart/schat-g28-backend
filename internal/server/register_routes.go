@@ -4,14 +4,12 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
-	"github.com/CP-RektMart/schat-g28-backend/internal/services/user"
 	"github.com/gofiber/contrib/websocket"
 )
 
 func (s *Server) RegisterRoutes(
 	authMiddleware authentication.AuthMiddleware,
 	authHandler *auth.Handler,
-	userHandler *user.Handler,
 	messageHandler *message.Handler,
 ) {
 	v1 := s.app.Group("/api/v1")
@@ -28,7 +26,8 @@ func (s *Server) RegisterRoutes(
 
 		// me
 		me := all.Group("/me")
-		me.Get("/", authMiddleware.Auth, userHandler.HandleGetMe)
+		me.Get("/", authMiddleware.Auth, authHandler.HandleGetMe)
+		me.Patch("/", authMiddleware.Auth, authHandler.HandleUpdateMe)
 
 		// messages
 		message := all.Group("/messages")

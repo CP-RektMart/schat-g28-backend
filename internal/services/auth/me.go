@@ -1,11 +1,9 @@
-package user
+package auth
 
 import (
+	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
-
-	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
-	"github.com/CP-RektMart/schat-g28-backend/internal/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,20 +21,14 @@ func (h *Handler) HandleGetMe(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed to get user id from context")
 	}
 
-	var user model.User
-	result := h.store.DB.First(&user, userID)
-	if result.Error != nil {
-		return apperror.Internal("failed to get user", nil)
+	u, err := h.repo.GetUserByID(userID)
+	if err != nil {
+		return apperror.NotFound("user not found", err)
 	}
 
-	response := dto.UserResponse{
-		ID:                user.ID,
-		Name:              user.Name,
-		Email:             user.Email,
-		ProfilePictureURL: user.ProfilePictureURL,
+	response := dto.HttpResponse[dto.UserResponse]{
+		Result: dto.ToUserResponse(u),
 	}
 
-	return c.Status(fiber.StatusOK).JSON(dto.HttpResponse[dto.UserResponse]{
-		Result: response,
-	})
+	return c.Status(fiber.StatusOK).JSON(response)
 }

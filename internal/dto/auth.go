@@ -9,11 +9,11 @@ type TokenResponse struct {
 }
 
 type RefreshTokenRequest struct {
-	RefreshToken string `json:"refreshToken" validate:"required"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type LoginRequest struct {
-	IDToken string `json:"idToken" validate:"required"`
+	IDToken string `json:"idToken"`
 }
 
 type LoginResponse struct {

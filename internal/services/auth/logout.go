@@ -15,7 +15,7 @@ import (
 func (h *Handler) HandleLogout(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 
-	userID, err := h.authmiddleware.GetUserIDFromContext(ctx)
+	userID, err := h.authMiddleware.GetUserIDFromContext(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to get user")
 	}

@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"github.com/CP-RektMart/schat-g28-backend/internal/database"
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/utils/oauth"
@@ -9,25 +8,25 @@ import (
 )
 
 type Handler struct {
-	store          *database.Store
+	repo           *Repository
 	validate       *validator.Validate
 	jwtService     *jwt.JWT
-	authmiddleware authentication.AuthMiddleware
+	authMiddleware authentication.AuthMiddleware
 	googleOauth    oauth.OAuth
 }
 
 func NewHandler(
-	store *database.Store,
 	validate *validator.Validate,
+	repo *Repository,
 	jwtService *jwt.JWT,
 	authmiddleware authentication.AuthMiddleware,
 	googleOauth oauth.OAuth,
 ) *Handler {
 	return &Handler{
-		store:          store,
 		validate:       validate,
+		repo:           repo,
 		jwtService:     jwtService,
-		authmiddleware: authmiddleware,
+		authMiddleware: authmiddleware,
 		googleOauth:    googleOauth,
 	}
 }

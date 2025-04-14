@@ -18,12 +18,8 @@ import (
 func (h *Handler) HandleLogin(c *fiber.Ctx) error {
 	ctx := c.Context()
 
-	req := new(dto.LoginRequest)
-	if err := c.BodyParser(req); err != nil {
-		return apperror.BadRequest("invalid request", err)
-	}
-
-	if err := h.validate.Struct(req); err != nil {
+	var req dto.LoginRequest
+	if err := c.BodyParser(&req); err != nil {
 		return apperror.BadRequest("invalid request", err)
 	}
 
@@ -32,39 +28,34 @@ func (h *Handler) HandleLogin(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed to validate id token")
 	}
 
-	user := h.getUserByEmail(OAuthUser.Email)
-	if user == nil {
-		if user, err = h.createUser(OAuthUser); err != nil {
-			return errors.Wrap(err, "failed create user")
+	user, err := h.repo.GetUserByEmail(OAuthUser.Email)
+	if err != nil {
+		user, err = model.NewUser(
+			OAuthUser.Name,
+			OAuthUser.Email,
+			OAuthUser.ProfilePictureURL,
+		)
+		if err != nil {
+			return err
+		}
+
+		user, err = h.repo.CreateUser(user)
+		if err != nil {
+			return err
 		}
 	}
 
-	token, err := h.jwtService.GenerateAndStoreTokenPair(ctx, user)
+	token, err := h.jwtService.GenerateAndStoreTokenPair(ctx, &user)
 	if err != nil {
 		return errors.Wrap(err, "failed to generate token pair")
 	}
 
 	result := dto.LoginResponse{
 		TokenResponse: dto.ToTokenResponse(*token),
-		User:          dto.ToUserResponse(*user),
+		User:          dto.ToUserResponse(user),
 	}
 
 	return c.Status(fiber.StatusOK).JSON(dto.HttpResponse[dto.LoginResponse]{
 		Result: result,
 	})
-}
-
-func (h *Handler) createUser(user model.User) (*model.User, error) {
-	if err := h.store.DB.Save(&user).Error; err != nil {
-		return nil, errors.Wrap(err, "failed to create user")
-	}
-	return &user, nil
-}
-
-func (h *Handler) getUserByEmail(email string) *model.User {
-	var user model.User
-	if err := h.store.DB.Where("email = ?", email).First(&user).Error; err != nil {
-		return nil
-	}
-	return &user
 }
