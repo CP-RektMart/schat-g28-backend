@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 
+	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
@@ -24,10 +25,30 @@ func NewGroup(profilePicture *string, name string, ownerID uint) (Group, error) 
 		OwnerID:           ownerID,
 	}
 	if err := g.Valid(); err != nil {
-		return Group{}, err
+		return Group{}, apperror.BadRequest("invalid input", err)
 	}
 
 	return g, nil
+}
+
+func (g *Group) Update(profilePicture, name *string, changerID uint) error {
+	if !g.IsOwner(changerID) {
+		return apperror.Forbidden("user not an owner of the group", nil)
+	}
+
+	if profilePicture != nil {
+		g.ProfilePictureURL = profilePicture
+	}
+
+	if name != nil {
+		g.Name = *name
+	}
+
+	if err := g.Valid(); err != nil {
+		return apperror.BadRequest("invalid input", err)
+	}
+
+	return nil
 }
 
 func (g *Group) Valid() error {

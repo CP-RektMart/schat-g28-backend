@@ -39,7 +39,7 @@ func (f *File) Valid() error {
 	return nil
 }
 
-func (f *File) AbleToDelete(userID uint) error {
+func (f *File) IsOwner(userID uint) error {
 	if userID != f.OwnerID {
 		return apperror.Forbidden("user is not the owner", nil)
 	}

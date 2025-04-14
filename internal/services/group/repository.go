@@ -30,3 +30,7 @@ func (r *Repository) Get(id uint) (model.Group, error) {
 	}
 	return g, nil
 }
+
+func (r *Repository) Update(g model.Group) error {
+	return r.db.Save(&g).Error
+}

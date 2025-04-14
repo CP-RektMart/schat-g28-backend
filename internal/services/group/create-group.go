@@ -31,7 +31,7 @@ func (h *Handler) HandleCreateGroup(c *fiber.Ctx) error {
 
 	group, err := model.NewGroup(req.ProfilePictureURL, req.Name, userID)
 	if err != nil {
-		return apperror.BadRequest("invalid request", err)
+		return err
 	}
 
 	if err := h.repo.Create(group); err != nil {

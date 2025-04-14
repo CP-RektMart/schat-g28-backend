@@ -30,7 +30,7 @@ func (h *Handler) HandleDeleteFile(c *fiber.Ctx) error {
 	}
 
 	if err := h.repo.Delete(ctx, req.ID, func(f model.File) error {
-		return f.AbleToDelete(userID)
+		return f.IsOwner(userID)
 	}); err != nil {
 		return errors.Wrap(err, "failed delete ")
 	}

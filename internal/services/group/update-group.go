@@ -1,6 +1,11 @@
 package group
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/cockroachdb/errors"
+	"github.com/gofiber/fiber/v2"
+)
 
 // @Summary			update group
 // @Tags			groups
@@ -14,5 +19,32 @@ import "github.com/gofiber/fiber/v2"
 // @Failure			404	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
 func (h *Handler) HandleUpdateGroup(c *fiber.Ctx) error {
-	return nil
+	ctx := c.UserContext()
+	userID, err := h.authMiddleware.GetUserIDFromContext(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed get userID from context")
+	}
+
+	var req dto.UpdateGroupRequest
+	if err := c.BodyParser(&req); err != nil {
+		return apperror.BadRequest("invalid request", err)
+	}
+	if err := c.ParamsParser(&req); err != nil {
+		return apperror.BadRequest("invalid request", err)
+	}
+
+	group, err := h.repo.Get(req.ID)
+	if err != nil {
+		return errors.Wrap(err, "failed fetch group")
+	}
+
+	if err := group.Update(req.ProfilePicture, req.Name, userID); err != nil {
+		return err
+	}
+
+	if err := h.repo.Update(group); err != nil {
+		return errors.Wrap(err, "failed update group")
+	}
+
+	return c.SendStatus(fiber.StatusOK)
 }

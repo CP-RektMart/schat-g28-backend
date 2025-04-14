@@ -8,7 +8,8 @@ type CreateGroupRequest struct {
 }
 
 type UpdateGroupRequest struct {
-	Name           string  `json:"name"`
+	ID             uint    `params:"id"`
+	Name           *string `json:"name"`
 	ProfilePicture *string `json:"profilePicture"`
 }
 
