@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/CP-RektMart/schat-g28-backend/internal/database"
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/internal/store"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/cockroachdb/errors"
 	"github.com/go-playground/validator/v10"
@@ -28,7 +28,7 @@ type Client struct {
 
 type Server struct {
 	clients  map[uint]*Client
-	store    *database.Store
+	store    *store.Store
 	validate *validator.Validate
 }
 
@@ -37,7 +37,7 @@ var (
 	once     sync.Once
 )
 
-func NewServer(store *database.Store, validate *validator.Validate) *Server {
+func NewServer(store *store.Store, validate *validator.Validate) *Server {
 	once.Do(func() {
 		instance = &Server{
 			store:    store,
@@ -88,7 +88,7 @@ func (c *Server) SendRawString(senderID uint, msg string) {
 	}
 
 	if err := c.store.DB.Create(&msgModel).Error; err != nil {
-		logger.Error("failed inserting message to database", slog.Any("error", err))
+		logger.Error("failed inserting message to store", slog.Any("error", err))
 		c.sendMessage(EventError, senderID, "internal error")
 		return
 	}
@@ -106,7 +106,7 @@ func (c *Server) SendRawString(senderID uint, msg string) {
 
 func (c *Server) SendMessageModel(msg model.DirectMessage) error {
 	if err := c.store.DB.Create(&msg).Error; err != nil {
-		return errors.Wrap(err, "failed save massage record to database")
+		return errors.Wrap(err, "failed save massage record to store")
 	}
 
 	json, err := json.Marshal(dto.ToDirectMessageResponse(msg))

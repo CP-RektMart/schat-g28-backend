@@ -1,8 +1,9 @@
 package config
 
 import (
+	"log"
+
 	"github.com/caarlos0/env/v10"
-	"github.com/cockroachdb/errors"
 	"github.com/joho/godotenv"
 
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
@@ -25,13 +26,13 @@ type AppConfig struct {
 	Store       storage.Config     `envPrefix:"STORAGE_"`
 }
 
-func Load() (*AppConfig, error) {
+func Load() *AppConfig {
 	appConfig := &AppConfig{}
 	_ = godotenv.Load()
 
 	if err := env.Parse(appConfig); err != nil {
-		return nil, errors.Wrap(err, "failed parse env")
+		log.Panic("failed parse env", err)
 	}
 
-	return appConfig, nil
+	return appConfig
 }

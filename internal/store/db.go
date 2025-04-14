@@ -1,4 +1,4 @@
-package database
+package store
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 func NewDB(ctx context.Context, pgConfig pglib.Config) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(pgConfig.String()), &gorm.Config{})
 	if err != nil {
-		logger.PanicContext(ctx, "failed to connect to database", slog.Any("error", err))
+		logger.PanicContext(ctx, "failed to connect to store", slog.Any("error", err))
 	}
 	return db
 }

@@ -7,7 +7,6 @@ import (
 	"log/slog"
 
 	_ "github.com/CP-RektMart/schat-g28-backend/doc"
-	"github.com/CP-RektMart/schat-g28-backend/internal/database"
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
@@ -36,7 +35,7 @@ type Server struct {
 	app    *fiber.App
 }
 
-func New(config Config, corsConfig CorsConfig, jwtConfig jwt.Config, db *database.Store) *Server {
+func New(config Config, corsConfig CorsConfig, jwtConfig jwt.Config) *Server {
 	app := fiber.New(fiber.Config{
 		AppName:       config.Name,
 		BodyLimit:     config.MaxBodyLimit * 1024 * 1024,
