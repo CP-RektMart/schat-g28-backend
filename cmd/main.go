@@ -13,6 +13,7 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/server"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
 	"github.com/CP-RektMart/schat-g28-backend/internal/store"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/redis"
@@ -47,6 +48,7 @@ func main() {
 	// repository
 	authRepo := auth.NewRepository(db)
 	fileRepo := file.NewRepository(db, storage)
+	groupRepo := group.NewRepository(db)
 
 	// services
 	jwtService := jwt.New(config.JWT, cache)
@@ -60,6 +62,8 @@ func main() {
 	authHandler := auth.NewHandler(validate, authRepo, jwtService, authMiddleware, googleOauth)
 	// messageHandler := message.NewHandler(store1, authMiddleware, chatService)
 	fileHandler := file.NewHandler(storage, authMiddleware, fileRepo)
+	groupHandler := group.NewHandler(authMiddleware, groupRepo)
+
 	server.RegisterDocs()
 
 	// routes
@@ -68,6 +72,7 @@ func main() {
 		authHandler,
 		// messageHandler,
 		fileHandler,
+		groupHandler,
 	)
 
 	server.Start(ctx, stop)

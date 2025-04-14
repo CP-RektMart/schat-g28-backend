@@ -4,6 +4,7 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
 )
 
 func (s *Server) RegisterRoutes(
@@ -11,6 +12,7 @@ func (s *Server) RegisterRoutes(
 	authHandler *auth.Handler,
 	// messageHandler *message.Handler,
 	fileHandler *file.Handler,
+	groupHandler *group.Handler,
 ) {
 	v1 := s.app.Group("/api/v1")
 
@@ -35,4 +37,8 @@ func (s *Server) RegisterRoutes(
 	file := v1.Group("/file")
 	file.Post("/", authMiddleware.Auth, fileHandler.HandleUploadFile)
 	file.Delete("/:id", authMiddleware.Auth, fileHandler.HandleDeleteFile)
+
+	// group
+	group := v1.Group("/groups")
+	group.Post("/", authMiddleware.Auth, groupHandler.HandleCreateGroup)
 }
