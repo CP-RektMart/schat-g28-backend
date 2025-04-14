@@ -1,6 +1,9 @@
 package dto
 
-import "github.com/CP-RektMart/schat-g28-backend/internal/model"
+import (
+	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/samber/lo"
+)
 
 type UserUpdateRequest struct {
 	Name              *string `json:"name"`
@@ -22,4 +25,10 @@ func ToUserResponse(user model.User) UserResponse {
 		Email:             user.Email,
 		ProfilePictureURL: user.ProfilePictureURL,
 	}
+}
+
+func ToUsersReponse(users []model.User) []UserResponse {
+	return lo.Map(users, func(u model.User, _ int) UserResponse {
+		return ToUserResponse(u)
+	})
 }

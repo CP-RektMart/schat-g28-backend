@@ -41,6 +41,40 @@ components:
         url:
           type: string
       type: object
+    dto.GroupMessageResponse:
+      properties:
+        content:
+          type: string
+        groupId:
+          type: integer
+        id:
+          type: integer
+        sendedAt:
+          type: string
+        senderId:
+          type: integer
+      type: object
+    dto.GroupResponse:
+      properties:
+        id:
+          type: integer
+        members:
+          items:
+            $ref: '#/components/schemas/dto.UserResponse'
+          type: array
+          uniqueItems: false
+        messages:
+          items:
+            $ref: '#/components/schemas/dto.GroupMessageResponse'
+          type: array
+          uniqueItems: false
+        name:
+          type: string
+        owner:
+          $ref: '#/components/schemas/dto.UserResponse'
+        profilePictureURL:
+          type: string
+      type: object
     dto.HttpError:
       properties:
         error:
@@ -58,6 +92,11 @@ components:
       properties:
         result:
           $ref: '#/components/schemas/dto.FileDetailResponse'
+      type: object
+    dto.HttpResponse-dto_GroupResponse:
+      properties:
+        result:
+          $ref: '#/components/schemas/dto.GroupResponse'
       type: object
     dto.HttpResponse-dto_LoginResponse:
       properties:
@@ -377,6 +416,50 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: delete group
+      tags:
+      - groups
+    get:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpResponse-dto_GroupResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get group
       tags:
       - groups
     patch:

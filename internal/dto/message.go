@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/samber/lo"
 )
 
 // Requests
@@ -70,4 +71,10 @@ func ToGroupMessageResponse(message model.GroupMessage) GroupMessageResponse {
 		GroupID:  message.GroupID,
 		SendedAt: message.CreatedAt,
 	}
+}
+
+func ToGroupMessagesResponse(messages []model.GroupMessage) []GroupMessageResponse {
+	return lo.Map(messages, func(msg model.GroupMessage, _ int) GroupMessageResponse {
+		return ToGroupMessageResponse(msg)
+	})
 }

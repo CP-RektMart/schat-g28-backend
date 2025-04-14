@@ -41,4 +41,7 @@ func (s *Server) RegisterRoutes(
 	// group
 	group := v1.Group("/groups")
 	group.Post("/", authMiddleware.Auth, groupHandler.HandleCreateGroup)
+	group.Get("/:id", authMiddleware.Auth, groupHandler.HandleGetByID)
+	group.Patch("/:id", authMiddleware.Auth, groupHandler.HandleUpdateGroup)
+	group.Get("/:id/join", authMiddleware.Auth, groupHandler.HandleJoinGroup)
 }

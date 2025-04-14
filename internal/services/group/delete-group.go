@@ -13,5 +13,7 @@ import "github.com/gofiber/fiber/v2"
 // @Failure			404	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
 func (h *Handler) HandleDeleteGroup(c *fiber.Ctx) error {
+	
+
 	return nil
 }
