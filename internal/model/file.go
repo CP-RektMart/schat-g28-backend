@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 
-	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"gorm.io/gorm"
 )
 
@@ -39,9 +38,6 @@ func (f *File) Valid() error {
 	return nil
 }
 
-func (f *File) IsOwner(userID uint) error {
-	if userID != f.OwnerID {
-		return apperror.Forbidden("user is not the owner", nil)
-	}
-	return nil
+func (f *File) IsOwner(userID uint) bool {
+	return f.OwnerID == userID
 }

@@ -2,7 +2,6 @@ package file
 
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
-	"github.com/CP-RektMart/schat-g28-backend/internal/model"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"
@@ -29,9 +28,16 @@ func (h *Handler) HandleDeleteFile(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid-request", err)
 	}
 
-	if err := h.repo.Delete(ctx, req.ID, func(f model.File) error {
-		return f.IsOwner(userID)
-	}); err != nil {
+	file, err := h.repo.GetByID(req.ID)
+	if err != nil {
+		return errors.Wrap(err, "failed fetch file")
+	}
+
+	if !file.IsOwner(userID) {
+		return apperror.Forbidden("user not the owner of the file", err)
+	}
+
+	if err := h.repo.Delete(ctx, req.ID); err != nil {
 		return errors.Wrap(err, "failed delete ")
 	}
 

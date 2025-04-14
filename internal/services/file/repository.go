@@ -52,15 +52,11 @@ func (r *Repository) GetByID(id uint) (model.File, error) {
 	return f, nil
 }
 
-func (r *Repository) Delete(ctx context.Context, id uint, permissionFn func(model.File) error) error {
+func (r *Repository) Delete(ctx context.Context, id uint) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		f, err := r.GetByID(id)
 		if err != nil {
 			return err
-		}
-
-		if err := permissionFn(f); err != nil {
-			return errors.Wrap(err, "user don't have permission to delete")
 		}
 
 		if err := r.db.Delete(&model.File{}, id).Error; err != nil {

@@ -44,3 +44,10 @@ func (r *Repository) Delete(id uint) error {
 	}
 	return nil
 }
+
+func (r *Repository) JoinGroup(groupID, userID uint) error {
+	group := model.Group{Model: gorm.Model{ID: groupID}}
+	user := model.User{Model: gorm.Model{ID: userID}}
+
+	return r.db.Model(&group).Association("Members").Append(&user)
+}

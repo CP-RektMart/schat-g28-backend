@@ -64,7 +64,7 @@ func (g *Group) Valid() error {
 }
 
 func (g *Group) IsOwner(id uint) bool {
-	return g.Owner.ID == id
+	return g.OwnerID == id
 }
 
 func (g *Group) IsMember(id uint) bool {

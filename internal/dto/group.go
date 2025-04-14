@@ -17,6 +17,10 @@ type DeleteGroupRequest struct {
 	ID uint `params:"id"`
 }
 
+type JoinGroupRequest struct {
+	ID uint `params:"id"`
+}
+
 type GetGroupReqest struct {
 	ID uint `params:"id"`
 }
