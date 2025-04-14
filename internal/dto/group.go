@@ -21,6 +21,9 @@ type JoinGroupRequest struct {
 	ID uint `params:"id"`
 }
 
+type LeaveGroupRequest struct {
+	ID uint `params:"id"`
+}
 type GetGroupReqest struct {
 	ID uint `params:"id"`
 }
