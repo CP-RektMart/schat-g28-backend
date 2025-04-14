@@ -11,10 +11,10 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/database"
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
+	"github.com/CP-RektMart/schat-g28-backend/internal/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/server"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
-	"github.com/CP-RektMart/schat-g28-backend/internal/utils/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/go-playground/validator/v10"
 )

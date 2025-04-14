@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
-	"github.com/CP-RektMart/schat-g28-backend/internal/utils/oauth"
+	"github.com/CP-RektMart/schat-g28-backend/internal/oauth"
 	"github.com/go-playground/validator/v10"
 )
 

@@ -6,8 +6,8 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
+	"github.com/CP-RektMart/schat-g28-backend/internal/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/server"
-	"github.com/CP-RektMart/schat-g28-backend/internal/utils/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/postgres"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/redis"
