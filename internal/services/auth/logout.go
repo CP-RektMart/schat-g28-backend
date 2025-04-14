@@ -6,17 +6,16 @@ import (
 )
 
 // @Summary			Logout
-// @Description		Logout
 // @Tags			auth
 // @Router			/api/v1/auth/logout [POST]
 // @Security		ApiKeyAuth
-// @Success			204
-// @Failure			400	{object}	dto.HttpError
+// @Success			200
+// @Failure			401	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
 func (h *Handler) HandleLogout(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 
-	userID, err := h.authmiddleware.GetUserIDFromContext(ctx)
+	userID, err := h.authMiddleware.GetUserIDFromContext(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to get user")
 	}

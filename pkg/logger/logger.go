@@ -17,7 +17,7 @@ var (
 	LevelPanic = slog.Level(14)
 )
 
-func Init(config Config) error {
+func Init(config Config) {
 	loggerLevel := new(slog.LevelVar)
 
 	if config.Debug {
@@ -25,17 +25,15 @@ func Init(config Config) error {
 	}
 
 	switch config.Output {
-	case "json":
-		logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelDebug,
-		}))
-	default:
+	case "debug":
 		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
 		}))
+	default:
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}))
 	}
-
-	return nil
 }
 
 func log(ctx context.Context, level slog.Level, msg string, args ...any) {

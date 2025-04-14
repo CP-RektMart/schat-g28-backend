@@ -59,7 +59,7 @@ func (h *Handler) toDirectChatResponse(userID uint, messages []model.DirectMessa
 		chat, ok := chats[talker.ID]
 		if !ok {
 			chats[talker.ID] = &dto.ChatDirectResponse{
-				User:     dto.ToPublicUserResponse(talker),
+				// User:     dto.ToPublicUserResponse(talker),
 				Messages: make([]dto.DirectMessageResponse, 0),
 			}
 			chat = chats[talker.ID]

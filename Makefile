@@ -11,4 +11,4 @@ start:
 	docker-compose up -d && air
 
 .PHONY:
-	server swagger start
+	server swagger start generate

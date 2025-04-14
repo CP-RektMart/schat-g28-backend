@@ -2,22 +2,24 @@ package main
 
 import (
 	"context"
-	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/CP-RektMart/schat-g28-backend/internal/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/config"
-	"github.com/CP-RektMart/schat-g28-backend/internal/database"
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
+	"github.com/CP-RektMart/schat-g28-backend/internal/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/server"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
-	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
-	"github.com/CP-RektMart/schat-g28-backend/internal/services/user"
-	"github.com/CP-RektMart/schat-g28-backend/internal/validator"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/friend"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
+	"github.com/CP-RektMart/schat-g28-backend/internal/store"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/redis"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/storage"
+	"github.com/go-playground/validator/v10"
 )
 
 // @title						Pic Me Pls API
@@ -29,39 +31,51 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
-	// hello
-	config := config.Load()
-
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	if err := logger.Init(config.Logger); err != nil {
-		logger.PanicContext(ctx, "failed to initialize logger", slog.Any("error", err))
-	}
+	config := config.Load()
 
-	store := database.New(ctx, config.Postgres, config.Redis)
-	server := server.New(config.Server, config.Cors, config.JWT, store)
+	logger.Init(config.Logger)
+
+	storage := storage.New(ctx, config.Store)
+	db := store.NewDB(ctx, config.Postgres)
+	cache := redis.New(ctx, config.Redis)
+	store.Migrate(db)
+
+	server := server.New(config.Server, config.Cors, config.JWT)
 	validate := validator.New()
 
+	// repository
+	authRepo := auth.NewRepository(db)
+	fileRepo := file.NewRepository(db, storage)
+	groupRepo := group.NewRepository(db)
+
 	// services
-	jwtService := jwt.New(config.JWT, store.Cache)
-	chatService := chat.NewServer(store, validate)
+	jwtService := jwt.New(config.JWT, cache)
+	// chatService := chat.NewServer(store1, validate)
+	googleOauth := oauth.NewGoogle(config.OAuthGoogle)
 
 	// middlewares
 	authMiddleware := authentication.NewAuthMiddleware(jwtService)
 
 	// handlers
-	authHandler := auth.NewHandler(store, validate, jwtService, authMiddleware, config.GoogleClientID)
-	userHandler := user.NewHandler(store, validate, authMiddleware)
-	messageHandler := message.NewHandler(store, authMiddleware, chatService)
+	authHandler := auth.NewHandler(validate, authRepo, jwtService, authMiddleware, googleOauth)
+	// messageHandler := message.NewHandler(store1, authMiddleware, chatService)
+	fileHandler := file.NewHandler(storage, authMiddleware, fileRepo)
+	groupHandler := group.NewHandler(authMiddleware, groupRepo)
+	friendHandler := friend.NewHandler(authMiddleware, authRepo)
+
 	server.RegisterDocs()
 
 	// routes
 	server.RegisterRoutes(
 		authMiddleware,
 		authHandler,
-		userHandler,
-		messageHandler,
+		// messageHandler,
+		fileHandler,
+		groupHandler,
+		friendHandler,
 	)
 
 	server.Start(ctx, stop)

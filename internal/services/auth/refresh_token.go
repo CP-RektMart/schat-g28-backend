@@ -10,10 +10,9 @@ import (
 )
 
 // @Summary			Refresh Token
-// @Description		Refresh Token
 // @Tags			auth
 // @Router			/api/v1/auth/refresh-token [POST]
-// @Param 			RequestBody 	body 	dto.RefreshTokenRequest 	true 	"request request"
+// @Param 			RequestBody 	body 	dto.RefreshTokenRequest 	true 	"body"
 // @Success			200 {object}	dto.HttpResponse[dto.TokenResponse]
 // @Failure			400	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError

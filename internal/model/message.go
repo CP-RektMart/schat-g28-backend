@@ -4,15 +4,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// type MessageType string
-
-// const (
-// 	MessageTypeText      MessageType = "TEXT"
-// 	MessageTypeImage     MessageType = "IMAGE"
-// 	MessageTypeQuotation MessageType = "QUOTATION"
-// 	MessageTypePreview   MessageType = "PREVIEW"
-// )
-
 type DirectMessage struct {
 	gorm.Model
 	Content string `gorm:"not null"`
