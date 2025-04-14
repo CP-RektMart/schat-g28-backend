@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"google.golang.org/api/idtoken"
 )
 
@@ -23,6 +24,10 @@ func NewGoogle(config GoogleConfig) OAuth {
 }
 
 func (g *Google) ValidateIDToken(c context.Context, idToken string) (model.User, error) {
+	if idToken == "" {
+		return model.User{}, apperror.BadRequest("no idToken", nil)
+	}
+
 	payload, err := idtoken.Validate(c, idToken, g.config.ClientID)
 	if err != nil {
 		return model.User{}, err

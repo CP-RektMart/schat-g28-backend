@@ -15,8 +15,9 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/user"
-	"github.com/CP-RektMart/schat-g28-backend/internal/validator"
+	"github.com/CP-RektMart/schat-g28-backend/internal/utils/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
+	"github.com/go-playground/validator/v10"
 )
 
 // @title						Pic Me Pls API
@@ -47,12 +48,13 @@ func main() {
 	// services
 	jwtService := jwt.New(config.JWT, store.Cache)
 	chatService := chat.NewServer(store, validate)
+	googleOauth := oauth.NewGoogle(config.OAuthGoogle)
 
 	// middlewares
 	authMiddleware := authentication.NewAuthMiddleware(jwtService)
 
 	// handlers
-	authHandler := auth.NewHandler(store, validate, jwtService, authMiddleware, config.GoogleClientID)
+	authHandler := auth.NewHandler(store, validate, jwtService, authMiddleware, googleOauth)
 	userHandler := user.NewHandler(store, validate, authMiddleware)
 	messageHandler := message.NewHandler(store, authMiddleware, chatService)
 	server.RegisterDocs()

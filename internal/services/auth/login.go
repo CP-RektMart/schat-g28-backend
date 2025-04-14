@@ -32,7 +32,7 @@ func (h *Handler) HandleLogin(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed to validate id token")
 	}
 
-	user := h.getUser(OAuthUser.Email)
+	user := h.getUserByEmail(OAuthUser.Email)
 	if user == nil {
 		if user, err = h.createUser(OAuthUser); err != nil {
 			return errors.Wrap(err, "failed create user")
@@ -61,7 +61,7 @@ func (h *Handler) createUser(user model.User) (*model.User, error) {
 	return &user, nil
 }
 
-func (h *Handler) getUser(email string) *model.User {
+func (h *Handler) getUserByEmail(email string) *model.User {
 	var user model.User
 	if err := h.store.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil
