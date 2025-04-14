@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/message"
 	"github.com/gofiber/contrib/websocket"
 )
@@ -11,6 +12,7 @@ func (s *Server) RegisterRoutes(
 	authMiddleware authentication.AuthMiddleware,
 	authHandler *auth.Handler,
 	messageHandler *message.Handler,
+	fileHandler *file.Handler,
 ) {
 	v1 := s.app.Group("/api/v1")
 
@@ -20,19 +22,19 @@ func (s *Server) RegisterRoutes(
 	auth.Post("/refresh-token", authHandler.HandleRefreshToken)
 	auth.Post("/logout", authMiddleware.Auth, authHandler.HandleLogout)
 
-	// all
-	{
-		all := v1.Group("/")
+	// me
+	me := v1.Group("/me")
+	me.Get("/", authMiddleware.Auth, authHandler.HandleGetMe)
+	me.Patch("/", authMiddleware.Auth, authHandler.HandleUpdateMe)
 
-		// me
-		me := all.Group("/me")
-		me.Get("/", authMiddleware.Auth, authHandler.HandleGetMe)
-		me.Patch("/", authMiddleware.Auth, authHandler.HandleUpdateMe)
+	// messages
+	message := v1.Group("/messages")
+	message.Use("/ws", messageHandler.HandleSupportWebAPI, authMiddleware.Auth, messageHandler.HandleWebsocket)
+	message.Get("/ws", websocket.New(messageHandler.HandleRealTimeMessages))
+	message.Get("/", authMiddleware.Auth, messageHandler.HandleListMessages)
 
-		// messages
-		message := all.Group("/messages")
-		message.Use("/ws", messageHandler.HandleSupportWebAPI, authMiddleware.Auth, messageHandler.HandleWebsocket)
-		message.Get("/ws", websocket.New(messageHandler.HandleRealTimeMessages))
-		message.Get("/", authMiddleware.Auth, messageHandler.HandleListMessages)
-	}
+	// file
+	file := v1.Group("/file")
+	file.Post("/", authMiddleware.Auth, fileHandler.HandleUploadFile)
+	file.Delete("/:id", authMiddleware.Auth, fileHandler.HandleDeleteFile)
 }

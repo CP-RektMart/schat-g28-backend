@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/url"
 	"path"
 	"strings"
 
+	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/cockroachdb/errors"
 	storage_go "github.com/supabase-community/storage-go"
 	"github.com/supabase-community/supabase-go"
@@ -24,16 +26,16 @@ type Client struct {
 	config Config
 }
 
-func New(ctx context.Context, config Config) (*Client, error) {
+func New(ctx context.Context, config Config) *Client {
 	client, err := supabase.NewClient(config.URL, config.Secret, nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to new Supabase client")
+		logger.Panic("failed initialize Supabase client", slog.Any("err", err))
 	}
 
 	return &Client{
 		Client: client.Storage,
 		config: config,
-	}, nil
+	}
 }
 
 func (c *Client) UploadFile(ctx context.Context, path string, contentType string, data io.Reader, overwrite bool) (string, error) {

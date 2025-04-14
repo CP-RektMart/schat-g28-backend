@@ -11,6 +11,7 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/postgres"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/redis"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/storage"
 )
 
 type AppConfig struct {
@@ -21,6 +22,7 @@ type AppConfig struct {
 	Redis       redis.Config       `envPrefix:"REDIS_"`
 	JWT         jwt.Config         `envPrefix:"JWT_"`
 	OAuthGoogle oauth.GoogleConfig `envPrefix:"OAUTH_GOOGLE"`
+	Store       storage.Config     `envPrefix:"STORAGE_"`
 }
 
 func Load() (*AppConfig, error) {

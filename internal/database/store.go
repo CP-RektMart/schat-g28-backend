@@ -46,6 +46,7 @@ func (s *Store) migrate() {
 		&model.Group{},
 		&model.DirectMessage{},
 		&model.GroupMessage{},
+		&model.File{},
 	); err != nil {
 		logger.Panic("failed to migrate database", slog.Any("error", err))
 	}
