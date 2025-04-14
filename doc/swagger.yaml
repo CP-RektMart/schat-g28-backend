@@ -36,6 +36,8 @@ components:
           type: integer
         ownerId:
           type: integer
+        path:
+          type: string
         url:
           type: string
       type: object
@@ -76,8 +78,6 @@ components:
       properties:
         idToken:
           type: string
-      required:
-      - idToken
       type: object
     dto.LoginResponse:
       properties:
@@ -94,8 +94,6 @@ components:
       properties:
         refreshToken:
           type: string
-      required:
-      - refreshToken
       type: object
     dto.TokenResponse:
       properties:
