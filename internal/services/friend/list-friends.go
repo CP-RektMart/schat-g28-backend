@@ -1,6 +1,9 @@
 package friend
 
-import "github.com/gofiber/fiber/v2"
+import (
+	_ "github.com/CP-RektMart/schat-g28-backend/internal/dto"
+	"github.com/gofiber/fiber/v2"
+)
 
 // @Summary			list user's friends
 // @Tags			friends

@@ -1,6 +1,26 @@
 components:
   schemas:
-    dto.ChatDirectResponse:
+    dto.ChatListResponse:
+      properties:
+        directs:
+          items:
+            $ref: '#/components/schemas/dto.DirectChatListResponse'
+          type: array
+          uniqueItems: false
+        groups:
+          items:
+            $ref: '#/components/schemas/dto.GroupChatListResponse'
+          type: array
+          uniqueItems: false
+      type: object
+    dto.CreateGroupRequest:
+      properties:
+        name:
+          type: string
+        profilePictureUrl:
+          type: string
+      type: object
+    dto.DirectChatDetailResponse:
       properties:
         messages:
           items:
@@ -10,12 +30,12 @@ components:
         user:
           $ref: '#/components/schemas/dto.UserResponse'
       type: object
-    dto.CreateGroupRequest:
+    dto.DirectChatListResponse:
       properties:
-        name:
-          type: string
-        profilePictureUrl:
-          type: string
+        lastMessage:
+          $ref: '#/components/schemas/dto.DirectMessageResponse'
+        user:
+          $ref: '#/components/schemas/dto.UserResponse'
       type: object
     dto.DirectMessageResponse:
       properties:
@@ -41,20 +61,17 @@ components:
         url:
           type: string
       type: object
-    dto.GroupMessageResponse:
+    dto.GroupChatListResponse:
       properties:
-        content:
-          type: string
-        groupId:
-          type: integer
-        id:
-          type: integer
-        sendedAt:
-          type: string
-        senderId:
-          type: integer
+        group:
+          $ref: '#/components/schemas/dto.GroupListResponse'
+        lastMessage:
+          items:
+            $ref: '#/components/schemas/dto.GroupMessageResponse'
+          type: array
+          uniqueItems: false
       type: object
-    dto.GroupResponse:
+    dto.GroupDetailResponse:
       properties:
         id:
           type: integer
@@ -75,28 +92,62 @@ components:
         profilePictureURL:
           type: string
       type: object
+    dto.GroupListResponse:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        owner:
+          $ref: '#/components/schemas/dto.UserResponse'
+        profilePictureURL:
+          type: string
+      type: object
+    dto.GroupMessageResponse:
+      properties:
+        content:
+          type: string
+        groupId:
+          type: integer
+        id:
+          type: integer
+        sendedAt:
+          type: string
+        senderId:
+          type: integer
+      type: object
     dto.HttpError:
       properties:
         error:
           type: string
       type: object
-    dto.HttpListResponse-dto_ChatDirectResponse:
+    dto.HttpListResponse-dto_UserResponse:
       properties:
         result:
           items:
-            $ref: '#/components/schemas/dto.ChatDirectResponse'
+            $ref: '#/components/schemas/dto.UserResponse'
           type: array
           uniqueItems: false
+      type: object
+    dto.HttpResponse-ChatListResponse:
+      properties:
+        result:
+          $ref: '#/components/schemas/dto.ChatListResponse'
+      type: object
+    dto.HttpResponse-dto_DirectChatDetailResponse:
+      properties:
+        result:
+          $ref: '#/components/schemas/dto.DirectChatDetailResponse'
       type: object
     dto.HttpResponse-dto_FileDetailResponse:
       properties:
         result:
           $ref: '#/components/schemas/dto.FileDetailResponse'
       type: object
-    dto.HttpResponse-dto_GroupResponse:
+    dto.HttpResponse-dto_GroupDetailResponse:
       properties:
         result:
-          $ref: '#/components/schemas/dto.GroupResponse'
+          $ref: '#/components/schemas/dto.GroupDetailResponse'
       type: object
     dto.HttpResponse-dto_LoginResponse:
       properties:
@@ -270,6 +321,94 @@ paths:
       summary: Refresh Token
       tags:
       - auth
+  /api/v1/chats:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpResponse-ChatListResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: list chat
+      tags:
+      - chats
+  /api/v1/chats/friends/{friendID}:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpResponse-dto_DirectChatDetailResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get dm chats detail
+      tags:
+      - chats
   /api/v1/files:
     post:
       requestBody:
@@ -344,6 +483,50 @@ paths:
       summary: delete file
       tags:
       - files
+  /api/v1/friends:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpListResponse-dto_UserResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: list user's friends
+      tags:
+      - friends
   /api/v1/friends/{friendID}:
     delete:
       parameters:
@@ -544,7 +727,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/dto.HttpResponse-dto_GroupResponse'
+                $ref: '#/components/schemas/dto.HttpResponse-dto_GroupDetailResponse'
           description: OK
         "400":
           content:
@@ -724,6 +907,85 @@ paths:
       summary: leave group
       tags:
       - groups
+  /api/v1/groups/{groupID}/members/{userID}:
+    delete:
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: kick group member
+      tags:
+      - groups
+    post:
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: add group member
+      tags:
+      - groups
   /api/v1/me:
     get:
       description: Get me
@@ -780,39 +1042,6 @@ paths:
       summary: Update me
       tags:
       - user
-  /api/v1/messages:
-    get:
-      description: list all direct message chats for each individual user
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dto.HttpListResponse-dto_ChatDirectResponse'
-          description: OK
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dto.HttpError'
-          description: Unauthorized
-        "404":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dto.HttpError'
-          description: Not Found
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dto.HttpError'
-          description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
-      summary: list all direct message chats
-      tags:
-      - direct_message
   /api/v1/messages/ws:
     get:
       description: |-
