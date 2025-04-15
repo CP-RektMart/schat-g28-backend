@@ -48,9 +48,12 @@ func (s *Server) RegisterRoutes(
 	group.Get("/:id/join", authMiddleware.Auth, groupHandler.HandleJoinGroup)
 	group.Get("/:id/leave", authMiddleware.Auth, groupHandler.HandleLeaveGroup)
 	group.Delete("/:id", authMiddleware.Auth, groupHandler.HandleDeleteGroup)
+	group.Post("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleAddGroupMember)
+	group.Delete("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleKickGroupMember)
 
 	// friend
 	friend := v1.Group("/friends")
+	friend.Get("/", authMiddleware.Auth, friendhandler.HandleListFriends)
 	friend.Post("/:friendID", authMiddleware.Auth, friendhandler.HandleAddFriend)
 	friend.Delete("/:friendID", authMiddleware.Auth, friendhandler.HandleUnFriend)
 }

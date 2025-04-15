@@ -1,9 +1,8 @@
 package model
 
 import (
-	"errors"
-
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/cockroachdb/errors"
 	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
@@ -18,11 +17,20 @@ type Group struct {
 	Messages          []GroupMessage `gorm:"foreignKey:GroupID"`
 }
 
-func NewGroup(profilePicture *string, name string, ownerID uint) (Group, error) {
+func NewGroup(profilePicture *string, name string, ownerID uint, memberIDs []uint) (Group, error) {
+	members := make([]User, len(memberIDs))
+	for i, memberID := range memberIDs {
+		if memberID == ownerID {
+			return Group{}, errors.New("owner cannot be member")
+		}
+		members[i] = User{Model: gorm.Model{ID: memberID}}
+	}
+
 	g := Group{
 		Name:              name,
 		ProfilePictureURL: profilePicture,
 		OwnerID:           ownerID,
+		Members:           members,
 	}
 	if err := g.Valid(); err != nil {
 		return Group{}, apperror.BadRequest("invalid input", err)
@@ -59,6 +67,36 @@ func (g *Group) Valid() error {
 	if g.OwnerID == 0 {
 		return errors.New("owner id cannot be empty")
 	}
+
+	return nil
+}
+
+func (g *Group) JoinGroup(userID uint) error {
+	if g.IsOwner(userID) {
+		return errors.New("user is an owner")
+	}
+
+	if g.IsMember(userID) {
+		return errors.New("already be a member")
+	}
+
+	g.Members = append(g.Members, User{Model: gorm.Model{ID: userID}})
+
+	return nil
+}
+
+func (g *Group) LeaveGroup(userID uint) error {
+	if g.IsOwner(userID) {
+		return errors.New("user is an owner")
+	}
+
+	if !g.IsMember(userID) {
+		return errors.New("user is not a member")
+	}
+
+	g.Members = lo.Filter(g.Members, func(m User, _ int) bool {
+		return g.ID != userID
+	})
 
 	return nil
 }

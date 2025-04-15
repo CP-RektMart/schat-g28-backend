@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/internal/utils/repository"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"gorm.io/gorm"
 )
@@ -17,9 +18,12 @@ func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{db}
 }
 
-func (r *Repository) GetUserByID(id uint) (model.User, error) {
+func (r *Repository) GetUserByID(id uint, preload ...string) (model.User, error) {
 	var u model.User
-	err := r.db.Preload("Groups").Preload("Friends").First(&u, id).Error
+
+	db := repository.AccumulatePreload(r.db, preload...)
+
+	err := db.First(&u, id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.User{}, apperror.NotFound("user don't exist", err)
@@ -29,9 +33,12 @@ func (r *Repository) GetUserByID(id uint) (model.User, error) {
 	return u, nil
 }
 
-func (r *Repository) GetUserByEmail(email string) (model.User, error) {
+func (r *Repository) GetUserByEmail(email string, preload ...string) (model.User, error) {
 	var u model.User
-	err := r.db.Where("email = ?", email).First(&u).Error
+
+	db := repository.AccumulatePreload(r.db, preload...)
+
+	err := db.Where("email = ?", email).First(&u).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.User{}, apperror.NotFound("user with this email not exist", err)

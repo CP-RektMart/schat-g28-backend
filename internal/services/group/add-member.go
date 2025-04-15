@@ -1,11 +1,18 @@
 package group
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
+	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/cockroachdb/errors"
+	"github.com/gofiber/fiber/v2"
+)
 
 // @Summary			add group member
 // @Tags			groups
 // @Router			/api/v1/groups/{groupID}/members/{userID} [POST]
 // @Security		ApiKeyAuth
+// @Param 			groupID 	path 	uint 	true  "group id"
+// @Param 			userID 		path 	uint 	true  "friend id"
 // @Success			200
 // @Failure			400	{object}	dto.HttpError
 // @Failure			401	{object}	dto.HttpError
@@ -13,5 +20,33 @@ import "github.com/gofiber/fiber/v2"
 // @Failure			404	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
 func (h *Handler) HandleAddGroupMember(c *fiber.Ctx) error {
-	return nil
+	ctx := c.UserContext()
+	userID, err := h.authMiddleware.GetUserIDFromContext(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed get userID from context")
+	}
+
+	var req dto.AddGroupMemberRequest
+	if err := c.ParamsParser(&req); err != nil {
+		return apperror.BadRequest("invalid request", err)
+	}
+
+	group, err := h.repo.Get(req.GroupID, "Members")
+	if err != nil {
+		return errors.Wrap(err, "group not found")
+	}
+
+	if !group.IsOwner(userID) {
+		return apperror.Forbidden("not an owner", nil)
+	}
+
+	if err := group.JoinGroup(req.UserID); err != nil {
+		return apperror.BadRequest(err.Error(), err)
+	}
+
+	if err := h.repo.JoinGroup(group.ID, req.UserID); err != nil {
+		return apperror.NotFound("user not found", err)
+	}
+
+	return c.SendStatus(fiber.StatusOK)
 }

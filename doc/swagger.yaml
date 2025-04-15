@@ -15,6 +15,11 @@ components:
       type: object
     dto.CreateGroupRequest:
       properties:
+        memberIds:
+          items:
+            type: integer
+          type: array
+          uniqueItems: false
         name:
           type: string
         profilePictureUrl:
@@ -909,6 +914,19 @@ paths:
       - groups
   /api/v1/groups/{groupID}/members/{userID}:
     delete:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      - description: friend id
+        in: path
+        name: userID
+        required: true
+        schema:
+          type: integer
       responses:
         "200":
           description: OK
@@ -948,6 +966,19 @@ paths:
       tags:
       - groups
     post:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      - description: friend id
+        in: path
+        name: userID
+        required: true
+        schema:
+          type: integer
       responses:
         "200":
           description: OK

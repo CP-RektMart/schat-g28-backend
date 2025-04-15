@@ -8,6 +8,7 @@ import (
 type CreateGroupRequest struct {
 	Name              string  `json:"name"`
 	ProfilePictureURL *string `json:"profilePictureUrl"`
+	MemberIDs         []uint  `json:"memberIds"`
 }
 
 type UpdateGroupRequest struct {

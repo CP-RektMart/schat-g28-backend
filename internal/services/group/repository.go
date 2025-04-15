@@ -1,10 +1,10 @@
 package group
 
 import (
-	"errors"
-
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/CP-RektMart/schat-g28-backend/internal/utils/repository"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/cockroachdb/errors"
 	"gorm.io/gorm"
 )
 
@@ -17,12 +17,15 @@ func NewRepository(db *gorm.DB) *Repository {
 }
 
 func (r *Repository) Create(g model.Group) error {
-	return r.db.Create(&g).Error
+	return r.db.Debug().Omit("Members.*").Create(&g).Error
 }
 
-func (r *Repository) Get(id uint) (model.Group, error) {
+func (r *Repository) Get(id uint, preload ...string) (model.Group, error) {
 	var g model.Group
-	if err := r.db.Preload("Owner").Preload("Messages").Preload("Members").First(&g, id).Error; err != nil {
+
+	db := repository.AccumulatePreload(r.db, preload...)
+
+	if err := db.First(&g, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Group{}, apperror.NotFound("group not found", err)
 		}
@@ -49,7 +52,7 @@ func (r *Repository) JoinGroup(groupID, userID uint) error {
 	group := model.Group{Model: gorm.Model{ID: groupID}}
 	user := model.User{Model: gorm.Model{ID: userID}}
 
-	return r.db.Model(&group).Association("Members").Append(&user)
+	return r.db.Model(&group).Omit("Members.*").Association("Members").Append(&user)
 }
 
 func (r *Repository) LeaveGroup(groupID, userID uint) error {

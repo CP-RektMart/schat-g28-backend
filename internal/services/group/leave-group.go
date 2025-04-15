@@ -34,12 +34,8 @@ func (h *Handler) HandleLeaveGroup(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed fetching group")
 	}
 
-	if group.IsOwner(userID) {
-		return apperror.BadRequest("user is owner of the group", nil)
-	}
-
-	if !group.IsMember(userID) {
-		return apperror.BadRequest("user is not a member of the group", nil)
+	if err := group.LeaveGroup(userID); err != nil {
+		return apperror.BadRequest(err.Error(), err)
 	}
 
 	if err := h.repo.LeaveGroup(req.ID, userID); err != nil {
