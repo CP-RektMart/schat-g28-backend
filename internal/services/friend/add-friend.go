@@ -30,7 +30,7 @@ func (h *Handler) HandleAddFriend(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid request", err)
 	}
 
-	user, err := h.authRepo.GetUserByID(userID)
+	user, err := h.authRepo.GetUserByID(userID, "Friends")
 	if err != nil {
 		return errors.Wrap(err, "failed fetch user")
 	}
