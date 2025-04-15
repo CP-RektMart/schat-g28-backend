@@ -71,6 +71,20 @@ func (g *Group) Valid() error {
 	return nil
 }
 
+func (g *Group) JoinGroup(userID uint) error {
+	if g.IsMember(userID) {
+		return errors.New("already be a member")
+	}
+
+	if g.IsOwner(userID) {
+		return errors.New("user is a owner")
+	}
+
+	g.Members = append(g.Members, User{Model: gorm.Model{ID: userID}})
+
+	return nil
+}
+
 func (g *Group) IsOwner(id uint) bool {
 	return g.OwnerID == id
 }

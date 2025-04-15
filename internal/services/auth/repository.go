@@ -21,7 +21,7 @@ func NewRepository(db *gorm.DB) *Repository {
 func (r *Repository) GetUserByID(id uint, preload ...string) (model.User, error) {
 	var u model.User
 
-	db := repository.AccumulatePreload(r.db, preload)
+	db := repository.AccumulatePreload(r.db, preload...)
 
 	err := db.First(&u, id).Error
 	if err != nil {
@@ -36,7 +36,7 @@ func (r *Repository) GetUserByID(id uint, preload ...string) (model.User, error)
 func (r *Repository) GetUserByEmail(email string, preload ...string) (model.User, error) {
 	var u model.User
 
-	db := repository.AccumulatePreload(r.db, preload)
+	db := repository.AccumulatePreload(r.db, preload...)
 
 	err := db.Where("email = ?", email).First(&u).Error
 	if err != nil {

@@ -953,6 +953,19 @@ paths:
       tags:
       - groups
     post:
+      parameters:
+      - description: group id
+        in: path
+        name: groupID
+        required: true
+        schema:
+          type: integer
+      - description: friend id
+        in: path
+        name: userID
+        required: true
+        schema:
+          type: integer
       responses:
         "200":
           description: OK

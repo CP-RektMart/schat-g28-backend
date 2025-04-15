@@ -39,6 +39,10 @@ func (h *Handler) HandleUpdateGroup(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed fetch group")
 	}
 
+	if !group.IsOwner(userID) {
+		return apperror.Forbidden("no permission", nil)
+	}
+
 	if err := group.Update(req.ProfilePicture, req.Name, userID); err != nil {
 		return err
 	}
