@@ -49,6 +49,7 @@ func (s *Server) RegisterRoutes(
 	group.Get("/:id/leave", authMiddleware.Auth, groupHandler.HandleLeaveGroup)
 	group.Delete("/:id", authMiddleware.Auth, groupHandler.HandleDeleteGroup)
 	group.Post("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleAddGroupMember)
+	group.Delete("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleKickGroupMember)
 
 	// friend
 	friend := v1.Group("/friends")

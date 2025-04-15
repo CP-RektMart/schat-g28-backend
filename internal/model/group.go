@@ -72,15 +72,31 @@ func (g *Group) Valid() error {
 }
 
 func (g *Group) JoinGroup(userID uint) error {
+	if g.IsOwner(userID) {
+		return errors.New("user is an owner")
+	}
+
 	if g.IsMember(userID) {
 		return errors.New("already be a member")
 	}
 
+	g.Members = append(g.Members, User{Model: gorm.Model{ID: userID}})
+
+	return nil
+}
+
+func (g *Group) LeaveGroup(userID uint) error {
 	if g.IsOwner(userID) {
-		return errors.New("user is a owner")
+		return errors.New("user is an owner")
 	}
 
-	g.Members = append(g.Members, User{Model: gorm.Model{ID: userID}})
+	if !g.IsMember(userID) {
+		return errors.New("user is not a member")
+	}
+
+	g.Members = lo.Filter(g.Members, func(m User, _ int) bool {
+		return g.ID != userID
+	})
 
 	return nil
 }

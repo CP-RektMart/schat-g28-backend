@@ -34,12 +34,8 @@ func (h *Handler) HandleJoinGroup(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed fetching group")
 	}
 
-	if group.IsOwner(userID) {
-		return apperror.BadRequest("user is owner of the group", nil)
-	}
-
-	if group.IsMember(userID) {
-		return apperror.BadRequest("user is member of the group", nil)
+	if err := group.JoinGroup(userID); err != nil {
+		return apperror.BadRequest(err.Error(), err)
 	}
 
 	if err := h.repo.JoinGroup(req.ID, userID); err != nil {
