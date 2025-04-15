@@ -12,7 +12,7 @@ import (
 // @Router			/api/v1/groups/{groupID} [GET]
 // @Security		ApiKeyAuth
 // @Param 			groupID 	path 	uint 	true  "group id"
-// @Success			200 {object} 	dto.HttpResponse[dto.GroupResponse]
+// @Success			200 {object} 	dto.HttpResponse[dto.GroupDetailResponse]
 // @Failure			400	{object}	dto.HttpError
 // @Failure			401	{object}	dto.HttpError
 // @Failure			403	{object}	dto.HttpError
@@ -39,7 +39,7 @@ func (h *Handler) HandleGetByID(c *fiber.Ctx) error {
 		return apperror.Forbidden("user not in the group", nil)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(dto.HttpResponse[dto.GroupResponse]{
-		Result: dto.ToGroupReponse(group),
+	return c.Status(fiber.StatusOK).JSON(dto.HttpResponse[dto.GroupDetailResponse]{
+		Result: dto.ToGroupDetailReponse(group),
 	})
 }

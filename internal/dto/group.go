@@ -1,6 +1,9 @@
 package dto
 
-import "github.com/CP-RektMart/schat-g28-backend/internal/model"
+import (
+	"github.com/CP-RektMart/schat-g28-backend/internal/model"
+	"github.com/samber/lo"
+)
 
 type CreateGroupRequest struct {
 	Name              string  `json:"name"`
@@ -28,7 +31,29 @@ type GetGroupReqest struct {
 	ID uint `params:"id"`
 }
 
-type GroupResponse struct {
+type GroupListResponse struct {
+	ID                uint         `json:"id"`
+	ProfilePictureURL *string      `json:"profilePictureURL"`
+	Name              string       `json:"name"`
+	Owner             UserResponse `json:"owner"`
+}
+
+func ToGroupListResponse(g model.Group) GroupListResponse {
+	return GroupListResponse{
+		ID:                g.ID,
+		ProfilePictureURL: g.ProfilePictureURL,
+		Name:              g.Name,
+		Owner:             ToUserResponse(g.Owner),
+	}
+}
+
+func ToGroupListsResponse(groups []model.Group) []GroupListResponse {
+	return lo.Map(groups, func(g model.Group, _ int) GroupListResponse {
+		return ToGroupListResponse(g)
+	})
+}
+
+type GroupDetailResponse struct {
 	ID                uint                   `json:"id"`
 	ProfilePictureURL *string                `json:"profilePictureURL"`
 	Name              string                 `json:"name"`
@@ -37,8 +62,8 @@ type GroupResponse struct {
 	Messages          []GroupMessageResponse `json:"messages"`
 }
 
-func ToGroupReponse(g model.Group) GroupResponse {
-	return GroupResponse{
+func ToGroupDetailReponse(g model.Group) GroupDetailResponse {
+	return GroupDetailResponse{
 		ID:                g.ID,
 		ProfilePictureURL: g.ProfilePictureURL,
 		Name:              g.Name,

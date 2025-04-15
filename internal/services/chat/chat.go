@@ -1,4 +1,4 @@
-package message
+package chat
 
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/chat"
