@@ -72,3 +72,13 @@ func ToGroupDetailReponse(g model.Group) GroupDetailResponse {
 		Messages:          ToGroupMessagesResponse(g.Messages),
 	}
 }
+
+type AddGroupMemberRequest struct {
+	GroupID uint `params:"groupID"`
+	UserID  uint `params:"userID"`
+}
+
+type KickGroupMemberRequest struct {
+	GroupID uint `params:"groupID"`
+	UserID  uint `params:"userID"`
+}
