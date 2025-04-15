@@ -1,9 +1,8 @@
 package model
 
 import (
-	"errors"
-
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/cockroachdb/errors"
 	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
@@ -18,11 +17,20 @@ type Group struct {
 	Messages          []GroupMessage `gorm:"foreignKey:GroupID"`
 }
 
-func NewGroup(profilePicture *string, name string, ownerID uint) (Group, error) {
+func NewGroup(profilePicture *string, name string, ownerID uint, memberIDs []uint) (Group, error) {
+	members := make([]User, len(memberIDs))
+	for i, memberID := range memberIDs {
+		if memberID == ownerID {
+			return Group{}, errors.New("owner cannot be member")
+		}
+		members[i] = User{Model: gorm.Model{ID: memberID}}
+	}
+
 	g := Group{
 		Name:              name,
 		ProfilePictureURL: profilePicture,
 		OwnerID:           ownerID,
+		Members:           members,
 	}
 	if err := g.Valid(); err != nil {
 		return Group{}, apperror.BadRequest("invalid input", err)

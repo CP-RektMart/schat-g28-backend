@@ -15,6 +15,11 @@ components:
       type: object
     dto.CreateGroupRequest:
       properties:
+        memberIds:
+          items:
+            type: integer
+          type: array
+          uniqueItems: false
         name:
           type: string
         profilePictureUrl:

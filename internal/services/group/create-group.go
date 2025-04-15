@@ -31,13 +31,13 @@ func (h *Handler) HandleCreateGroup(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid request", err)
 	}
 
-	group, err := model.NewGroup(req.ProfilePictureURL, req.Name, userID)
+	group, err := model.NewGroup(req.ProfilePictureURL, req.Name, userID, req.MemberIDs)
 	if err != nil {
-		return err
+		return apperror.BadRequest(err.Error(), err)
 	}
 
 	if err := h.repo.Create(group); err != nil {
-		return errors.Wrap(err, "failed save group record")
+		return apperror.BadRequest("user not exist", err)
 	}
 
 	return c.SendStatus(fiber.StatusOK)

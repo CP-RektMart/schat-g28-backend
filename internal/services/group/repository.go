@@ -1,10 +1,9 @@
 package group
 
 import (
-	"errors"
-
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
+	"github.com/cockroachdb/errors"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +16,7 @@ func NewRepository(db *gorm.DB) *Repository {
 }
 
 func (r *Repository) Create(g model.Group) error {
-	return r.db.Create(&g).Error
+	return r.db.Debug().Omit("Members.*").Create(&g).Error
 }
 
 func (r *Repository) Get(id uint) (model.Group, error) {
