@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"encoding/json"
 	"log/slog"
 	"sync"
 
@@ -42,7 +43,20 @@ func (h *Handler) receiveRealtimeMessage(wg *sync.WaitGroup, c *websocket.Conn, 
 		}
 
 		if mt == websocket.TextMessage {
-			h.chatService.SendRawString(userID, string(msg))
+			// Determine if the message is for a group or direct chat
+			var msgReq map[string]interface{}
+			if err := json.Unmarshal(msg, &msgReq); err != nil {
+				logger.Error("Failed to unmarshal message", slog.Any("error", err))
+				continue
+			}
+
+			if _, ok := msgReq["groupId"].(float64); ok {
+				// Handle group message
+				h.chatService.SendGroupRawString(userID, string(msg))
+			} else {
+				// Handle direct message
+				h.chatService.SendDirectRawString(userID, string(msg))
+			}
 		}
 	}
 }

@@ -65,7 +65,7 @@ func (c *Server) Logout(userID uint) {
 	}
 }
 
-func (c *Server) SendRawString(senderID uint, msg string) {
+func (c *Server) SendDirectRawString(senderID uint, msg string) {
 	var msgReq dto.DirectMessageRequest
 	if err := json.Unmarshal([]byte(msg), &msgReq); err != nil {
 		logger.Error("Failed Unmarshal json", slog.Any("error", err))
@@ -102,6 +102,57 @@ func (c *Server) SendRawString(senderID uint, msg string) {
 
 	c.sendMessage(EventMessage, msgModel.ReceiverID, string(json))
 	c.sendMessage(EventMessage, msgModel.SenderID, string(json))
+}
+
+func (c *Server) SendGroupRawString(senderID uint, msg string) {
+	var msgReq dto.GroupMessageRequest
+	if err := json.Unmarshal([]byte(msg), &msgReq); err != nil {
+		logger.Error("Failed Unmarshal json", slog.Any("error", err))
+		c.sendMessage(EventError, senderID, "invalid message")
+		return
+	}
+
+	if err := c.validate.Struct(msgReq); err != nil {
+		logger.Error("Failed validate message request", slog.Any("error", err))
+		c.sendMessage(EventError, senderID, "invalid message")
+		return
+
+	}
+
+	msgModel := dto.ToGroupMessageModel(senderID, msgReq)
+
+	if err := c.store.DB.Create(&msgModel).Error; err != nil {
+		logger.Error("failed inserting message to store", slog.Any("error", err))
+		c.sendMessage(EventError, senderID, "internal error")
+		return
+	}
+
+	json, err := json.Marshal(dto.ToGroupMessageResponse(msgModel))
+	if err != nil {
+		logger.Error("failed Marshal realtime message response to json", slog.Any("error", err))
+		c.sendMessage(EventError, senderID, "internal error")
+		return
+	}
+
+	// Broadcast the message to all group members
+    c.broadcastToGroup(msgModel.GroupID, string(json), senderID)
+}
+
+func (c *Server) broadcastToGroup(groupID uint, msg string, senderID uint) {
+    // Fetch group members from the database
+    var group model.Group
+    if err := c.store.DB.Preload("Members").First(&group, groupID).Error; err != nil {
+        logger.Error("Failed to fetch group members", slog.Any("error", err))
+        c.sendMessage(EventError, senderID, "group not found")
+        return
+    }
+
+    // Send the message to all connected members of the group
+    for _, member := range group.Members {
+        if c.isUserExist(member.ID) {
+            c.sendMessage(EventMessage, member.ID, msg)
+        }
+    }
 }
 
 func (c *Server) SendMessageModel(msg model.DirectMessage) error {

@@ -3,15 +3,17 @@ package server
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/friend"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
+	"github.com/gofiber/contrib/websocket"
 )
 
 func (s *Server) RegisterRoutes(
 	authMiddleware authentication.AuthMiddleware,
 	authHandler *auth.Handler,
-	// messageHandler *message.Handler,
+	chatHandler *chat.Handler,
 	fileHandler *file.Handler,
 	groupHandler *group.Handler,
 	friendhandler *friend.Handler,
@@ -30,10 +32,10 @@ func (s *Server) RegisterRoutes(
 	me.Patch("/", authMiddleware.Auth, authHandler.HandleUpdateMe)
 
 	// messages
-	// message := v1.Group("/messages")
-	// message.Use("/ws", messageHandler.HandleSupportWebAPI, authMiddleware.Auth, messageHandler.HandleWebsocket)
-	// message.Get("/ws", websocket.New(messageHandler.HandleRealTimeMessages))
-	// message.Get("/", authMiddleware.Auth, messageHandler.HandleListMessages)
+	chat := v1.Group("/chat")
+	chat.Use("/ws", chatHandler.HandleSupportWebAPI, authMiddleware.Auth, chatHandler.HandleWebsocket)
+	chat.Get("/ws", websocket.New(chatHandler.HandleRealTimeMessages))
+	chat.Get("/", authMiddleware.Auth, chatHandler.HandleListChat)
 
 	// file
 	file := v1.Group("/file")
