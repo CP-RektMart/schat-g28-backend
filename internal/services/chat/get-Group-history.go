@@ -15,6 +15,6 @@ import (
 // @Failure			403	{object}	dto.HttpError
 // @Failure			404	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
-func (h *Handler) HandleGetDMHistory(c *fiber.Ctx) error {
+func (h *Handler) HandleGetGroupHistory(c *fiber.Ctx) error {
 	return nil
 }

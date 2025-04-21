@@ -39,6 +39,7 @@ type GroupListResponse struct {
 	Owner             UserResponse `json:"owner"`
 }
 
+
 func ToGroupListResponse(g model.Group) GroupListResponse {
 	return GroupListResponse{
 		ID:                g.ID,
