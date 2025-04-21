@@ -3,18 +3,18 @@ package chat
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
-	"github.com/CP-RektMart/schat-g28-backend/internal/store"
+	"gorm.io/gorm"
 )
 
 type Handler struct {
-	store          *store.Store
+	db             *gorm.DB
 	chatService    *chat.Server
 	authentication authentication.AuthMiddleware
 }
 
-func NewHandler(store *store.Store, authentication authentication.AuthMiddleware, chatService *chat.Server) *Handler {
+func NewHandler(db *gorm.DB, authentication authentication.AuthMiddleware, chatService *chat.Server) *Handler {
 	return &Handler{
-		store:          store,
+		db:             db,
 		chatService:    chatService,
 		authentication: authentication,
 	}

@@ -6,12 +6,14 @@ import (
 	"os/signal"
 	"syscall"
 
+	chatService "github.com/CP-RektMart/schat-g28-backend/internal/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/config"
 	"github.com/CP-RektMart/schat-g28-backend/internal/jwt"
 	"github.com/CP-RektMart/schat-g28-backend/internal/middlewares/authentication"
 	"github.com/CP-RektMart/schat-g28-backend/internal/oauth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/server"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
+	"github.com/CP-RektMart/schat-g28-backend/internal/services/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/friend"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
@@ -53,7 +55,8 @@ func main() {
 
 	// services
 	jwtService := jwt.New(config.JWT, cache)
-	// chatService := chat.NewServer(store1, validate)
+	chatService := chatService.NewServer(db, validate)
+
 	googleOauth := oauth.NewGoogle(config.OAuthGoogle)
 
 	// middlewares
@@ -65,6 +68,7 @@ func main() {
 	fileHandler := file.NewHandler(storage, authMiddleware, fileRepo)
 	groupHandler := group.NewHandler(authMiddleware, groupRepo)
 	friendHandler := friend.NewHandler(authMiddleware, authRepo)
+	chatHandler := chat.NewHandler(db, authMiddleware, chatService)
 
 	server.RegisterDocs()
 
@@ -72,7 +76,7 @@ func main() {
 	server.RegisterRoutes(
 		authMiddleware,
 		authHandler,
-		// messageHandler,
+		chatHandler,
 		fileHandler,
 		groupHandler,
 		friendHandler,

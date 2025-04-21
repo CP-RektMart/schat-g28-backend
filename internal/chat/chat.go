@@ -8,10 +8,10 @@ import (
 
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
 	"github.com/CP-RektMart/schat-g28-backend/internal/model"
-	"github.com/CP-RektMart/schat-g28-backend/internal/store"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
 	"github.com/cockroachdb/errors"
 	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
 )
 
 type EventType string
@@ -28,7 +28,7 @@ type Client struct {
 
 type Server struct {
 	clients  map[uint]*Client
-	store    *store.Store
+	db       *gorm.DB
 	validate *validator.Validate
 }
 
@@ -37,10 +37,10 @@ var (
 	once     sync.Once
 )
 
-func NewServer(store *store.Store, validate *validator.Validate) *Server {
+func NewServer(db *gorm.DB, validate *validator.Validate) *Server {
 	once.Do(func() {
 		instance = &Server{
-			store:    store,
+			db:       db,
 			validate: validate,
 			clients:  make(map[uint]*Client),
 		}
@@ -87,7 +87,7 @@ func (c *Server) SendDirectRawString(senderID uint, msg string) {
 		return
 	}
 
-	if err := c.store.DB.Create(&msgModel).Error; err != nil {
+	if err := c.db.Create(&msgModel).Error; err != nil {
 		logger.Error("failed inserting message to store", slog.Any("error", err))
 		c.sendMessage(EventError, senderID, "internal error")
 		return
@@ -121,7 +121,7 @@ func (c *Server) SendGroupRawString(senderID uint, msg string) {
 
 	msgModel := dto.ToGroupMessageModel(senderID, msgReq)
 
-	if err := c.store.DB.Create(&msgModel).Error; err != nil {
+	if err := c.db.Create(&msgModel).Error; err != nil {
 		logger.Error("failed inserting message to store", slog.Any("error", err))
 		c.sendMessage(EventError, senderID, "internal error")
 		return
@@ -135,28 +135,28 @@ func (c *Server) SendGroupRawString(senderID uint, msg string) {
 	}
 
 	// Broadcast the message to all group members
-    c.broadcastToGroup(msgModel.GroupID, string(json), senderID)
+	c.broadcastToGroup(msgModel.GroupID, string(json), senderID)
 }
 
 func (c *Server) broadcastToGroup(groupID uint, msg string, senderID uint) {
-    // Fetch group members from the database
-    var group model.Group
-    if err := c.store.DB.Preload("Members").First(&group, groupID).Error; err != nil {
-        logger.Error("Failed to fetch group members", slog.Any("error", err))
-        c.sendMessage(EventError, senderID, "group not found")
-        return
-    }
+	// Fetch group members from the database
+	var group model.Group
+	if err := c.db.Preload("Members").First(&group, groupID).Error; err != nil {
+		logger.Error("Failed to fetch group members", slog.Any("error", err))
+		c.sendMessage(EventError, senderID, "group not found")
+		return
+	}
 
-    // Send the message to all connected members of the group
-    for _, member := range group.Members {
-        if c.isUserExist(member.ID) {
-            c.sendMessage(EventMessage, member.ID, msg)
-        }
-    }
+	// Send the message to all connected members of the group
+	for _, member := range group.Members {
+		if c.isUserExist(member.ID) {
+			c.sendMessage(EventMessage, member.ID, msg)
+		}
+	}
 }
 
 func (c *Server) SendMessageModel(msg model.DirectMessage) error {
-	if err := c.store.DB.Create(&msg).Error; err != nil {
+	if err := c.db.Create(&msg).Error; err != nil {
 		return errors.Wrap(err, "failed save massage record to store")
 	}
 
