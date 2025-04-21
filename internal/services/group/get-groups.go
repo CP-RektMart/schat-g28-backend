@@ -2,7 +2,6 @@ package group
 
 import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/dto"
-	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,11 +17,6 @@ import (
 // @Failure			404	{object}	dto.HttpError
 // @Failure			500	{object}	dto.HttpError
 func (h *Handler) HandleGetGroups(c *fiber.Ctx) error {
-	var req dto.GetGroupReqest
-	if err := c.ParamsParser(&req); err != nil {
-		return apperror.BadRequest("invalid request", err)
-	}
-
 	group, err := h.repo.Get()
 	if err != nil {
 		return errors.Wrap(err, "failed fetch user")
