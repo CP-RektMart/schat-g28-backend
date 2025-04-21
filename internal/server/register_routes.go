@@ -58,4 +58,7 @@ func (s *Server) RegisterRoutes(
 	friend.Get("/", authMiddleware.Auth, friendhandler.HandleListFriends)
 	friend.Post("/:friendID", authMiddleware.Auth, friendhandler.HandleAddFriend)
 	friend.Delete("/:friendID", authMiddleware.Auth, friendhandler.HandleUnFriend)
+
+	// history chat
+	v1.Get("/messages", authMiddleware.Auth, chatHandler.HandleListChat)
 }

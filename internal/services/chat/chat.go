@@ -9,13 +9,13 @@ import (
 type Handler struct {
 	db             *gorm.DB
 	chatService    *chat.Server
-	authentication authentication.AuthMiddleware
+	authMiddleware authentication.AuthMiddleware
 }
 
-func NewHandler(db *gorm.DB, authentication authentication.AuthMiddleware, chatService *chat.Server) *Handler {
+func NewHandler(db *gorm.DB, authMiddleware authentication.AuthMiddleware, chatService *chat.Server) *Handler {
 	return &Handler{
 		db:             db,
 		chatService:    chatService,
-		authentication: authentication,
+		authMiddleware: authMiddleware,
 	}
 }

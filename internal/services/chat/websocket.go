@@ -19,7 +19,7 @@ const jwtEntityKey = "jwtEntityKey"
 // @Failure      400
 func (h *Handler) HandleWebsocket(c *fiber.Ctx) error {
 	if websocket.IsWebSocketUpgrade(c) {
-		jwtEntity, err := h.authentication.GetJWTEntityFromContext(c.UserContext())
+		jwtEntity, err := h.authMiddleware.GetJWTEntityFromContext(c.UserContext())
 		if err != nil {
 			return errors.Wrap(err, "failed getting jwtEntity from context")
 		}
