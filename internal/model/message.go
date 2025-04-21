@@ -21,5 +21,5 @@ type GroupMessage struct {
 	SenderID uint `gorm:"not null"`
 	GroupID  uint `gorm:"not null"`
 	Sender   User `gorm:"foreignKey:SenderID"`
-	Group    User `gorm:"foreignKey:GroupID"`
+	Group    Group `gorm:"foreignKey:GroupID"`
 }

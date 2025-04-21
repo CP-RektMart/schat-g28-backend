@@ -2,6 +2,7 @@ package chat
 
 import (
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"sync"
 
@@ -50,7 +51,7 @@ func (h *Handler) receiveRealtimeMessage(wg *sync.WaitGroup, c *websocket.Conn, 
 				continue
 			}
 
-			if _, ok := msgReq["groupId"].(float64); ok {
+			if _, ok := msgReq["groupId"]; ok {
 				// Handle group message
 				h.chatService.SendGroupRawString(userID, string(msg))
 			} else {

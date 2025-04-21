@@ -15,7 +15,6 @@ type DirectMessageRequest struct {
 
 type GroupMessageRequest struct {
 	Content    string `json:"content" validate:"required"`
-	ReceiverID uint   `json:"receiverId" validate:"required"`
 	GroupID    uint   `json:"groupId" validate:"required"`
 }
 

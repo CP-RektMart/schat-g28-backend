@@ -19,6 +19,7 @@ type EventType string
 const (
 	EventError   EventType = "ERROR"
 	EventMessage EventType = "MESSAGE"
+	EventGroup   EventType = "GROUP"
 )
 
 type Client struct {
@@ -141,16 +142,18 @@ func (c *Server) SendGroupRawString(senderID uint, msg string) {
 func (c *Server) broadcastToGroup(groupID uint, msg string, senderID uint) {
 	// Fetch group members from the database
 	var group model.Group
-	if err := c.db.Preload("Members").First(&group, groupID).Error; err != nil {
+	if err := c.db.Preload("Owner").Preload("Members").First(&group, groupID).Error; err != nil {
 		logger.Error("Failed to fetch group members", slog.Any("error", err))
 		c.sendMessage(EventError, senderID, "group not found")
 		return
 	}
 
+	group.Members = append(group.Members, group.Owner)
+
 	// Send the message to all connected members of the group
 	for _, member := range group.Members {
 		if c.isUserExist(member.ID) {
-			c.sendMessage(EventMessage, member.ID, msg)
+			c.sendMessage(EventGroup, member.ID, msg)
 		}
 	}
 }
