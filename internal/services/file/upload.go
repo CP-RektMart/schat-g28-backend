@@ -40,7 +40,7 @@ func (h *Handler) HandleUploadFile(c *fiber.Ctx) error {
 	f, err := h.repo.Create(
 		ctx,
 		fmt.Sprintf("/file/%s_%s", uuid.NewString(), file.Filename),
-		file.Header.Get("content-type"),
+		file.Header.Get("Content-Type"),
 		data,
 		userID,
 		model.NewFile,

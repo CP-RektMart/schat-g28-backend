@@ -34,7 +34,7 @@ func (h *Handler) HandleUpdateMe(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = u.Update(req.Name, req.Email, req.ProfilePictureURL)
+	err = u.Update(req.Name, req.Email, req.ProfilePictureURL, req.Color)
 	if err != nil {
 		return err
 	}

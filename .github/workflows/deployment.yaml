@@ -44,7 +44,7 @@ jobs:
           tags: ghcr.io/cp-rektmart/schat-g28-backend:latest
       - uses: deploys-app/deploys-action@v1
         with:
-          project: schat-g28        
+          project: schat-g28-2
           location: gke.cluster-rcf2
           name: schat-g28
           image: ghcr.io/cp-rektmart/schat-g28-backend@${{ steps.docker_build.outputs.digest }}
