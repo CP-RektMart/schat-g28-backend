@@ -149,6 +149,7 @@ func (c *Server) broadcastToGroup(groupID uint, msg string, senderID uint) {
 	}
 
 	group.Members = append(group.Members, group.Owner)
+	fmt.Println(group.Members)
 
 	// Send the message to all connected members of the group
 	for _, member := range group.Members {

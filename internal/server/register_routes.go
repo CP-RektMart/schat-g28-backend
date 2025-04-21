@@ -38,7 +38,7 @@ func (s *Server) RegisterRoutes(
 	chat.Get("/", authMiddleware.Auth, chatHandler.HandleListChat)
 
 	// file
-	file := v1.Group("/file")
+	file := v1.Group("/files")
 	file.Post("/", authMiddleware.Auth, fileHandler.HandleUploadFile)
 	file.Delete("/:id", authMiddleware.Auth, fileHandler.HandleDeleteFile)
 

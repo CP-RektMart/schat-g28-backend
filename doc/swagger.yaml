@@ -635,8 +635,8 @@ paths:
         description: group detail
         required: true
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
         "400":
           content:
             application/json:
@@ -682,8 +682,8 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
         "400":
           content:
             application/json:
@@ -785,8 +785,8 @@ paths:
         description: group detail
         required: true
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
         "400":
           content:
             application/json:
@@ -832,6 +832,8 @@ paths:
         schema:
           type: integer
       responses:
+        "204":
+          description: No Content
         "400":
           content:
             application/json:
@@ -877,6 +879,8 @@ paths:
         schema:
           type: integer
       responses:
+        "204":
+          description: No Content
         "400":
           content:
             application/json:
@@ -928,8 +932,8 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
         "400":
           content:
             application/json:
@@ -980,8 +984,8 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
         "400":
           content:
             application/json:

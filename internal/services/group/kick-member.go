@@ -13,7 +13,7 @@ import (
 // @Security		ApiKeyAuth
 // @Param 			groupID 	path 	uint 	true  "group id"
 // @Param 			userID 		path 	uint 	true  "friend id"
-// @Success			200
+// @Success			204
 // @Failure			400	{object}	dto.HttpError
 // @Failure			401	{object}	dto.HttpError
 // @Failure			403	{object}	dto.HttpError
@@ -48,5 +48,5 @@ func (h *Handler) HandleKickGroupMember(c *fiber.Ctx) error {
 		return apperror.NotFound("user not found", err)
 	}
 
-	return c.SendStatus(fiber.StatusOK)
+	return c.SendStatus(fiber.StatusNoContent)
 }
