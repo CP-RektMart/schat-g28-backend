@@ -19,6 +19,10 @@ type UserResponse struct {
 	ProfilePictureURL string `json:"profilePictureUrl"`
 }
 
+type GetUserReqest struct {
+	ID uint `params:"id"`
+}
+
 func ToUserResponse(user model.User) UserResponse {
 	return UserResponse{
 		ID:                user.ID,

@@ -38,7 +38,7 @@ func (r *Repository) GetByID(id uint, preload ...string) (model.Group, error) {
 
 	db := repository.AccumulatePreload(r.db, preload...)
 
-	if err := db.Preload("Members").Preload("Messages").First(&g, id).Error; err != nil {
+	if err := db.First(&g, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Group{}, apperror.NotFound("group not found", err)
 		}
