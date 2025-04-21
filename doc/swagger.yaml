@@ -137,6 +137,14 @@ components:
           type: array
           uniqueItems: false
       type: object
+    dto.HttpListResponse-dto_UserResponse:
+      properties:
+        result:
+          items:
+            $ref: '#/components/schemas/dto.UserResponse'
+          type: array
+          uniqueItems: false
+      type: object
     dto.HttpResponse-ChatListResponse:
       properties:
         result:
@@ -1004,3 +1012,47 @@ paths:
       summary: connect to websocket
       tags:
       - message
+  /api/v1/users:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpListResponse-dto_UserResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get users
+      tags:
+      - user
