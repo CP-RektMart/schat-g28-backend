@@ -5,7 +5,6 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
-	"github.com/CP-RektMart/schat-g28-backend/internal/services/friend"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
 	"github.com/gofiber/contrib/websocket"
 )
@@ -16,7 +15,6 @@ func (s *Server) RegisterRoutes(
 	chatHandler *chat.Handler,
 	fileHandler *file.Handler,
 	groupHandler *group.Handler,
-	friendhandler *friend.Handler,
 ) {
 	v1 := s.app.Group("/api/v1")
 
@@ -53,9 +51,4 @@ func (s *Server) RegisterRoutes(
 	group.Post("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleAddGroupMember)
 	group.Delete("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleKickGroupMember)
 
-	// friend
-	friend := v1.Group("/friends")
-	friend.Get("/", authMiddleware.Auth, friendhandler.HandleListFriends)
-	friend.Post("/:friendID", authMiddleware.Auth, friendhandler.HandleAddFriend)
-	friend.Delete("/:friendID", authMiddleware.Auth, friendhandler.HandleUnFriend)
 }

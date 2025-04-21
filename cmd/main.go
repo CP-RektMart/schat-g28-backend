@@ -15,7 +15,6 @@ import (
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/auth"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/chat"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/file"
-	"github.com/CP-RektMart/schat-g28-backend/internal/services/friend"
 	"github.com/CP-RektMart/schat-g28-backend/internal/services/group"
 	"github.com/CP-RektMart/schat-g28-backend/internal/store"
 	"github.com/CP-RektMart/schat-g28-backend/pkg/logger"
@@ -67,7 +66,6 @@ func main() {
 	// messageHandler := message.NewHandler(store1, authMiddleware, chatService)
 	fileHandler := file.NewHandler(storage, authMiddleware, fileRepo)
 	groupHandler := group.NewHandler(authMiddleware, groupRepo)
-	friendHandler := friend.NewHandler(authMiddleware, authRepo)
 	chatHandler := chat.NewHandler(db, authMiddleware, chatService)
 
 	server.RegisterDocs()
@@ -79,7 +77,6 @@ func main() {
 		chatHandler,
 		fileHandler,
 		groupHandler,
-		friendHandler,
 	)
 
 	server.Start(ctx, stop)

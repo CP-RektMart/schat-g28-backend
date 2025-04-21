@@ -1,4 +1,8 @@
 package dto
+type ChatListResponse struct {
+	Directs []DirectChatListResponse `json:"directs"`
+	Groups  []GroupChatListResponse  `json:"groups"`
+}
 
 type DirectChatListResponse struct {
 	User        UserResponse          `json:"user"`
@@ -10,10 +14,6 @@ type GroupChatListResponse struct {
 	LastMessage []GroupMessageResponse `json:"lastMessage"`
 }
 
-type ChatListResponse struct {
-	Directs []DirectChatListResponse `json:"directs"`
-	Groups  []GroupChatListResponse  `json:"groups"`
-}
 
 type DirectChatDetailResponse struct {
 	User     UserResponse            `json:"user"`
