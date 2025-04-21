@@ -43,6 +43,7 @@ func (s *Server) RegisterRoutes(
 	// group
 	group := v1.Group("/groups")
 	group.Post("/", authMiddleware.Auth, groupHandler.HandleCreateGroup)
+	group.Get("/", authMiddleware.Auth, groupHandler.HandleGetGroups)
 	group.Get("/:id", authMiddleware.Auth, groupHandler.HandleGetByID)
 	group.Patch("/:id", authMiddleware.Auth, groupHandler.HandleUpdateGroup)
 	group.Get("/:id/join", authMiddleware.Auth, groupHandler.HandleJoinGroup)
@@ -51,6 +52,5 @@ func (s *Server) RegisterRoutes(
 	group.Post("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleAddGroupMember)
 	group.Delete("/:groupID/members/:userID", authMiddleware.Auth, groupHandler.HandleKickGroupMember)
 
-	// history chat
-	v1.Get("/messages", authMiddleware.Auth, chatHandler.HandleListChat)
+	// chats
 }

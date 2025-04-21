@@ -31,7 +31,7 @@ func (h *Handler) HandleKickGroupMember(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid request", err)
 	}
 
-	group, err := h.repo.Get(req.GroupID, "Members")
+	group, err := h.repo.GetByID(req.GroupID, "Members")
 	if err != nil {
 		return errors.Wrap(err, "group not found")
 	}

@@ -37,8 +37,11 @@ components:
       type: object
     dto.DirectChatListResponse:
       properties:
-        lastMessage:
-          $ref: '#/components/schemas/dto.DirectMessageResponse'
+        messages:
+          items:
+            $ref: '#/components/schemas/dto.DirectMessageResponse'
+          type: array
+          uniqueItems: false
         user:
           $ref: '#/components/schemas/dto.UserResponse'
       type: object
@@ -70,7 +73,7 @@ components:
       properties:
         group:
           $ref: '#/components/schemas/dto.GroupListResponse'
-        lastMessage:
+        messages:
           items:
             $ref: '#/components/schemas/dto.GroupMessageResponse'
           type: array
@@ -125,6 +128,14 @@ components:
       properties:
         error:
           type: string
+      type: object
+    dto.HttpListResponse-dto_GroupListResponse:
+      properties:
+        result:
+          items:
+            $ref: '#/components/schemas/dto.GroupListResponse'
+          type: array
+          uniqueItems: false
       type: object
     dto.HttpResponse-ChatListResponse:
       properties:
@@ -483,6 +494,49 @@ paths:
       tags:
       - files
   /api/v1/groups:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpListResponse-dto_GroupListResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get groups
+      tags:
+      - groups
     post:
       requestBody:
         content:

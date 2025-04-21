@@ -34,7 +34,7 @@ func (h *Handler) HandleUpdateGroup(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid request", err)
 	}
 
-	group, err := h.repo.Get(req.ID)
+	group, err := h.repo.GetByID(req.ID)
 	if err != nil {
 		return errors.Wrap(err, "failed fetch group")
 	}

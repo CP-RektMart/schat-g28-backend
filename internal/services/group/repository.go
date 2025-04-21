@@ -20,7 +20,20 @@ func (r *Repository) Create(g model.Group) error {
 	return r.db.Debug().Omit("Members.*").Create(&g).Error
 }
 
-func (r *Repository) Get(id uint, preload ...string) (model.Group, error) {
+func (r *Repository) Get() ([]model.Group, error) {
+	var g []model.Group
+
+	if err := r.db.Find(&g).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return []model.Group{}, apperror.NotFound("groups not found", err)
+		}
+		return []model.Group{}, err
+	}
+
+	return g, nil
+}
+
+func (r *Repository) GetByID(id uint, preload ...string) (model.Group, error) {
 	var g model.Group
 
 	db := repository.AccumulatePreload(r.db, preload...)
