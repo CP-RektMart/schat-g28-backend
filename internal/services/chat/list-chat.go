@@ -24,7 +24,7 @@ func (h *Handler) HandleListChat(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 	userID, err := h.authMiddleware.GetUserIDFromContext(ctx)
 	if err != nil {
-		return errors.Wrap(err, "failed get userID from context")
+		return errors.Wrap(err, "failed to get userID from context")
 	}
 
 	var directMessages []model.DirectMessage
@@ -39,7 +39,7 @@ func (h *Handler) HandleListChat(c *fiber.Ctx) error {
 		if err == gorm.ErrRecordNotFound {
 			return apperror.NotFound("Messages not found", err)
 		}
-		return errors.Wrap(err, "failed getting sended messages")
+		return errors.Wrap(err, "failed to get sent messages")
 	}
 
 	var groupMessages []model.GroupMessage
@@ -53,7 +53,7 @@ func (h *Handler) HandleListChat(c *fiber.Ctx) error {
 		if err == gorm.ErrRecordNotFound {
 			return apperror.NotFound("Messages not found", err)
 		}
-		return errors.Wrap(err, "failed getting sended messages")
+		return errors.Wrap(err, "failed to get sent messages")
 	}
 
 	directs := h.toDirectMessageResponse(userID, directMessages)
