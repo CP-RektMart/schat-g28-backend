@@ -12,7 +12,7 @@ import (
 // @Router			/api/v1/groups/{groupID}/leave [GET]
 // @Security		ApiKeyAuth
 // @Param 			groupID 	path 	uint 	true  "group id"
-// @success			204 
+// @success			204
 // @Failure			400	{object}	dto.HttpError
 // @Failure			401	{object}	dto.HttpError
 // @Failure			403	{object}	dto.HttpError
@@ -30,7 +30,7 @@ func (h *Handler) HandleLeaveGroup(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid-request", err)
 	}
 
-	group, err := h.repo.Get(req.ID)
+	group, err := h.repo.GetByID(req.ID)
 	if err != nil {
 		return errors.Wrap(err, "failed fetching group")
 	}

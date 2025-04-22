@@ -5,13 +5,13 @@ type ChatListResponse struct {
 }
 
 type DirectChatListResponse struct {
-	User        UserResponse          `json:"user"`
-	LastMessage DirectMessageResponse `json:"lastMessage"`
+	User     UserResponse            `json:"user"`
+	Messages []DirectMessageResponse `json:"messages"`
 }
 
 type GroupChatListResponse struct {
-	Group       GroupListResponse      `json:"group"`
-	LastMessage []GroupMessageResponse `json:"lastMessage"`
+	Group    GroupListResponse      `json:"group"`
+	Messages []GroupMessageResponse `json:"messages"`
 }
 
 

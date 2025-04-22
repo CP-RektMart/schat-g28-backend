@@ -14,8 +14,8 @@ type DirectMessageRequest struct {
 }
 
 type GroupMessageRequest struct {
-	Content    string `json:"content" validate:"required"`
-	GroupID    uint   `json:"groupId" validate:"required"`
+	Content string `json:"content" validate:"required"`
+	GroupID uint   `json:"groupId" validate:"required"`
 }
 
 // Responses
@@ -70,6 +70,12 @@ func ToGroupMessageResponse(message model.GroupMessage) GroupMessageResponse {
 		GroupID:  message.GroupID,
 		SendedAt: message.CreatedAt,
 	}
+}
+
+func ToDirectMessagesResponse(messages []model.DirectMessage) []DirectMessageResponse {
+	return lo.Map(messages, func(msg model.DirectMessage, _ int) DirectMessageResponse {
+		return ToDirectMessageResponse(msg)
+	})
 }
 
 func ToGroupMessagesResponse(messages []model.GroupMessage) []GroupMessageResponse {
