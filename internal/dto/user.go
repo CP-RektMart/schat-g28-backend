@@ -23,6 +23,14 @@ type GetUserReqest struct {
 	ID uint `params:"id"`
 }
 
+type UserDetailResponse struct {
+	ID                uint                    `json:"id"`
+	ProfilePictureURL *string                 `json:"profilePictureURL"`
+	Name              string                  `json:"name"`
+	Email             string                  `json:"email"`
+	Messages          []DirectMessageResponse `json:"messages"`
+}
+
 func ToUserResponse(user model.User) UserResponse {
 	return UserResponse{
 		ID:                user.ID,
@@ -36,4 +44,14 @@ func ToUsersReponse(users []model.User) []UserResponse {
 	return lo.Map(users, func(u model.User, _ int) UserResponse {
 		return ToUserResponse(u)
 	})
+}
+
+func ToUserDetailResponse(user model.User, messages []model.DirectMessage) UserDetailResponse {
+	return UserDetailResponse{
+		ID:                user.ID,
+		ProfilePictureURL: &user.ProfilePictureURL,
+		Name:              user.Name,
+		Email:             user.Email,
+		Messages:          ToDirectMessagesResponse(messages),
+	}
 }

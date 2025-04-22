@@ -72,6 +72,12 @@ func ToGroupMessageResponse(message model.GroupMessage) GroupMessageResponse {
 	}
 }
 
+func ToDirectMessagesResponse(messages []model.DirectMessage) []DirectMessageResponse {
+	return lo.Map(messages, func(msg model.DirectMessage, _ int) DirectMessageResponse {
+		return ToDirectMessageResponse(msg)
+	})
+}
+
 func ToGroupMessagesResponse(messages []model.GroupMessage) []GroupMessageResponse {
 	return lo.Map(messages, func(msg model.GroupMessage, _ int) GroupMessageResponse {
 		return ToGroupMessageResponse(msg)

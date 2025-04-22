@@ -175,6 +175,11 @@ components:
         result:
           $ref: '#/components/schemas/dto.TokenResponse'
       type: object
+    dto.HttpResponse-dto_UserDetailResponse:
+      properties:
+        result:
+          $ref: '#/components/schemas/dto.UserDetailResponse'
+      type: object
     dto.HttpResponse-dto_UserResponse:
       properties:
         result:
@@ -217,6 +222,22 @@ components:
         name:
           type: string
         profilePicture:
+          type: string
+      type: object
+    dto.UserDetailResponse:
+      properties:
+        email:
+          type: string
+        id:
+          type: integer
+        messages:
+          items:
+            $ref: '#/components/schemas/dto.DirectMessageResponse'
+          type: array
+          uniqueItems: false
+        name:
+          type: string
+        profilePictureURL:
           type: string
       type: object
     dto.UserResponse:
@@ -1054,5 +1075,56 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: get users
+      tags:
+      - user
+  /api/v1/users/{id}:
+    get:
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpResponse-dto_UserDetailResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.HttpError'
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get user by id
       tags:
       - user

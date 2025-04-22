@@ -52,8 +52,7 @@ func (h *Handler) HandleGetByID(c *fiber.Ctx) error {
 		return errors.Wrap(err, "failed to get sent messages")
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"user":     user,
-		"messages": messages,
+	return c.Status(fiber.StatusOK).JSON(dto.HttpResponse[dto.UserDetailResponse]{
+		Result: dto.ToUserDetailResponse(user, messages),
 	})
 }
