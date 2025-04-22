@@ -51,3 +51,13 @@ jobs:
         env:
           DEPLOYS_AUTH_USER: ${{ secrets.DEPLOYS_AUTH_USER }}
           DEPLOYS_AUTH_PASS: ${{ secrets.DEPLOYS_AUTH_PASS }}
+      - uses: deploys-app/deploys-action@v1
+        with:
+          project: ${{ secrets.DEPLOYS_PROJECTYNAME }}
+          location: gke.cluster-rcf2
+          name: schat-g28yoketh
+          image: ghcr.io/cp-rektmart/schat-g28-backend@${{ steps.docker_build.outputs.digest }}
+        env:
+          DEPLOYS_AUTH_USER: ${{ secrets.DEPLOYS_AUTH_USER_V2 }}
+          DEPLOYS_AUTH_PASS: ${{ secrets.DEPLOYS_AUTH_PASS_V2 }}
+        
