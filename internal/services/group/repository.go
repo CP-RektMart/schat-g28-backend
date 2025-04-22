@@ -23,7 +23,9 @@ func (r *Repository) Create(g model.Group) error {
 func (r *Repository) Get() ([]model.Group, error) {
 	var g []model.Group
 
-	if err := r.db.Find(&g).Error; err != nil {
+	db := repository.AccumulatePreload(r.db, "Owner")
+
+	if err := db.Find(&g).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return []model.Group{}, apperror.NotFound("groups not found", err)
 		}
