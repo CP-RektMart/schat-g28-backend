@@ -30,7 +30,7 @@ func (h *Handler) HandleGetByID(c *fiber.Ctx) error {
 		return apperror.BadRequest("invalid request", err)
 	}
 
-	group, err := h.repo.GetByID(req.ID, "Members", "Messages")
+	group, err := h.repo.GetByID(req.ID, "Members", "Messages", "Owner")
 	if err != nil {
 		return errors.Wrap(err, "failed fetch user")
 	}
