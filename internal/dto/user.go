@@ -17,6 +17,7 @@ type UserResponse struct {
 	Name              string `json:"name"`
 	Email             string `json:"email"`
 	ProfilePictureURL string `json:"profilePictureUrl"`
+	Color             string `json:"color"`
 }
 
 type GetUserReqest struct {

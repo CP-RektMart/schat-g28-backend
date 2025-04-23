@@ -242,6 +242,8 @@ components:
       type: object
     dto.UserResponse:
       properties:
+        color:
+          type: string
         email:
           type: string
         id:
