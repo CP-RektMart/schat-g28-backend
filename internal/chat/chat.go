@@ -50,6 +50,10 @@ func NewServer(db *gorm.DB, validate *validator.Validate) *Server {
 	return instance
 }
 
+func (c *Server) GetActiveUsers() map[uint]*Client {
+	return c.clients
+}
+
 func (c *Server) Register(userID uint) *Client {
 	client := Client{
 		Message:   make(chan string),
