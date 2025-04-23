@@ -1,6 +1,8 @@
 package model
 
 import (
+	"slices"
+
 	"github.com/CP-RektMart/schat-g28-backend/pkg/apperror"
 	"github.com/cockroachdb/errors"
 	"github.com/samber/lo"
@@ -18,11 +20,15 @@ type Group struct {
 }
 
 func NewGroup(profilePicture *string, name string, ownerID uint, memberIDs []uint) (Group, error) {
+	// remove duplicated member id
+	slices.Sort(memberIDs)
+	memberIDs = slices.Compact(memberIDs)
+
 	members := make([]User, len(memberIDs))
 	for i, memberID := range memberIDs {
-		if memberID == ownerID {
-			return Group{}, errors.New("owner cannot be member")
-		}
+		// if memberID == ownerID {
+		// 	return Group{}, errors.New("owner cannot be member")
+		// }
 		members[i] = User{Model: gorm.Model{ID: memberID}}
 	}
 
