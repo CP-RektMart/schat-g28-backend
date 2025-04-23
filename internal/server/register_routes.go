@@ -58,4 +58,5 @@ func (s *Server) RegisterRoutes(
 	users := v1.Group("/users")
 	users.Get("/", authMiddleware.Auth, userHandler.HandleGetUsers)
 	users.Get("/:id", authMiddleware.Auth, userHandler.HandleGetByID)
+	users.Get("/active", authMiddleware.Auth, userHandler.HandleGetActiveUsers)
 }

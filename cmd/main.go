@@ -69,7 +69,7 @@ func main() {
 	fileHandler := file.NewHandler(storage, authMiddleware, fileRepo)
 	groupHandler := group.NewHandler(authMiddleware, groupRepo)
 	chatHandler := chat.NewHandler(db, authMiddleware, chatService)
-	userHandler := userServices.NewHandler(db, authMiddleware, userRepo)
+	userHandler := userServices.NewHandler(db, authMiddleware, userRepo, chatService)
 
 	server.RegisterDocs()
 

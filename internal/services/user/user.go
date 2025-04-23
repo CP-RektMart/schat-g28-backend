@@ -18,5 +18,6 @@ func NewHandler(db *gorm.DB, authMiddleware authentication.AuthMiddleware, repo 
 		db:             db,
 		authMiddleware: authMiddleware,
 		repo:           repo,
+		chatService:    chatService,
 	}
 }
